@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@mozilla/readability": "^0.4.1"
+  }
+}

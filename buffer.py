@@ -71,7 +71,7 @@ class AppBuffer(BrowserBuffer):
         self.pw_autofill_id = 0
         self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
 
-        self.readability_js = open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+        self.readability_js = open(os.path.join(os.path.dirname(__file__),
                                                 "node_modules",
                                                 "@mozilla",
                                                 "readability",
