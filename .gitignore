@@ -1,3 +1,4 @@
 node_modules/
 dist/
 tags
+/__pycache__/
