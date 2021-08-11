@@ -1,0 +1,15 @@
+{
+    "pacman": [
+        "aria2"
+    ],
+    "apt": [
+        "aria2"
+    ],
+    "dnf": [
+        "aria2"
+    ],
+    "pkg": [
+        "aria2"
+    ],
+    "npm_install": true
+}
