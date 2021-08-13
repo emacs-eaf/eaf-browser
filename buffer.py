@@ -78,6 +78,11 @@ class AppBuffer(BrowserBuffer):
                                                 "Readability.js"
                                                 ), encoding="utf-8").read()
 
+        self.buffer_widget.dark_mode_js = open(os.path.join(os.path.dirname(__file__),
+                                                            "node_modules",
+                                                            "darkreader",
+                                                            "darkreader.js")).read()
+
         self.close_page.connect(self.record_close_page)
 
         self.buffer_widget.titleChanged.connect(self.record_history)
