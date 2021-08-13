@@ -588,7 +588,7 @@ Otherwise send key 'esc' to browser."
       (set (make-local-variable 'eaf--buffer-app-name) buffer-app-name)
       (set (make-local-variable 'eaf--buffer-id) buffer-id))
     (switch-to-buffer edit-text-buffer)
-    (setq-local eaf-mindmap--current-add-mode "")
+    (setq-local eaf-edit-confirm-action "")
     (eaf--edit-set-header-line)
     (insert focus-text)
     ;; When text line number above
