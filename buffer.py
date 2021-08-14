@@ -69,7 +69,7 @@ class AppBuffer(BrowserBuffer):
 
         self.autofill = PasswordDb(os.path.join(os.path.dirname(self.config_dir), "browser", "password.db"))
         self.pw_autofill_id = 0
-        self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
+        self.pw_autofill_raw = None
 
         self.readability_js = open(os.path.join(os.path.dirname(__file__),
                                                 "node_modules",
@@ -99,6 +99,7 @@ class AppBuffer(BrowserBuffer):
         self.buffer_widget.urlChanged.connect(self.skip_youtube_ads)
 
         # Draw progressbar.
+        self.caret_browsing_js_raw = None
         self.progressbar_progress = 0
         self.progressbar_color = QColor(get_emacs_var("eaf-emacs-theme-foreground-color"))
         self.progressbar_height = 2
@@ -157,7 +158,10 @@ class AppBuffer(BrowserBuffer):
             cursor_foreground_color = ""
             cursor_background_color = ""
 
-            self.caret_browsing_js = self.buffer_widget.caret_browsing_js_raw.replace("%1", cursor_foreground_color).replace("%2", cursor_background_color)
+            if self.caret_browsing_js_raw == None:
+                self.caret_browsing_js_raw = self.buffer_widget.read_js_content("caret_browsing.js")
+
+            self.caret_browsing_js = self.caret_browsing_js_raw.replace("%1", cursor_foreground_color).replace("%2", cursor_background_color)
             self.buffer_widget.eval_js(self.caret_browsing_js)
             self.caret_js_ready = True
 
@@ -287,6 +291,9 @@ class AppBuffer(BrowserBuffer):
             self.buffer_widget.load(QUrl(free_ad_url))
 
     def add_password_entry(self):
+        if self.pw_autofill_raw == None:
+            self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
+
         self.buffer_widget.eval_js(self.pw_autofill_raw.replace("%1", "''"))
         password, form_data = self.buffer_widget.execute_js("retrievePasswordFromPage();")
         if password != "":
@@ -298,6 +305,9 @@ class AppBuffer(BrowserBuffer):
             return False
 
     def pw_autofill_gen_id(self, id):
+        if self.pw_autofill_raw == None:
+            self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
+
         result = self.autofill.get_entries(urlparse(self.url).hostname, id)
         new_id = 0
         for row in result:
