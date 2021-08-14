@@ -71,12 +71,7 @@ class AppBuffer(BrowserBuffer):
         self.pw_autofill_id = 0
         self.pw_autofill_raw = None
 
-        self.readability_js = open(os.path.join(os.path.dirname(__file__),
-                                                "node_modules",
-                                                "@mozilla",
-                                                "readability",
-                                                "Readability.js"
-                                                ), encoding="utf-8").read()
+        self.readability_js = None
 
         self.buffer_widget.dark_mode_js = open(os.path.join(os.path.dirname(__file__),
                                                             "node_modules",
@@ -449,6 +444,14 @@ class AppBuffer(BrowserBuffer):
 
     @interactive(insert_or_do=True)
     def switch_to_reader_mode(self):
+        if self.readability_js == None:
+            self.readability_js = open(os.path.join(os.path.dirname(__file__),
+                                                    "node_modules",
+                                                    "@mozilla",
+                                                    "readability",
+                                                    "Readability.js"
+                                                    ), encoding="utf-8").read()
+
         self.buffer_widget.eval_js(self.readability_js)
         html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
         if html == None:
@@ -459,6 +462,14 @@ class AppBuffer(BrowserBuffer):
 
     @interactive(insert_or_do=True)
     def export_text(self):
+        if self.readability_js == None:
+            self.readability_js = open(os.path.join(os.path.dirname(__file__),
+                                                    "node_modules",
+                                                    "@mozilla",
+                                                    "readability",
+                                                    "Readability.js"
+                                                    ), encoding="utf-8").read()
+
         self.buffer_widget.eval_js(self.readability_js)
         text = self.buffer_widget.execute_js("new Readability(document).parse().textContent;")
         self.refresh_page()
