@@ -30,6 +30,7 @@ import os
 import re
 import sqlite3
 import subprocess
+import threading
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
@@ -47,25 +48,8 @@ class AppBuffer(BrowserBuffer):
         else:
             self.buffer_widget.setUrl(QUrl(url))
 
-        self.history_list = []
-        if get_emacs_var("eaf-browser-remember-history"):
-            self.history_log_file_path = os.path.join(self.config_dir, "browser", "history", "log.txt")
-
-            self.history_pattern = re.compile("^(.+)ᛝ(.+)ᛡ(.+)$")
-            self.noprefix_url_pattern = re.compile("^(https?|file)://(.+)")
-            self.nopostfix_url_pattern = re.compile("^[^#\?]*")
-            self.history_close_file_path = os.path.join(self.config_dir, "browser", "history", "close.txt")
-            touch(self.history_log_file_path)
-            with open(self.history_log_file_path, "r", encoding="utf-8") as f:
-                raw_list = f.readlines()
-                for raw_his in raw_list:
-                    his_line = re.match(self.history_pattern, raw_his)
-                    if his_line is None: # Obsolete Old history format
-                        old_his = re.match("(.*)\s((https?|file):[^\s]+)$", raw_his)
-                        if old_his is not None:
-                            self.history_list.append(HistoryPage(old_his.group(1), old_his.group(2), 1))
-                    else:
-                        self.history_list.append(HistoryPage(his_line.group(1), his_line.group(2), his_line.group(3)))
+        # Use thread to avoid slow down open speed.
+        threading.Thread(target=self.load_history).start()
 
         self.autofill = PasswordDb(os.path.join(os.path.dirname(self.config_dir), "browser", "password.db"))
         self.pw_autofill_id = 0
@@ -80,7 +64,6 @@ class AppBuffer(BrowserBuffer):
 
         self.close_page.connect(self.record_close_page)
 
-        self.buffer_widget.titleChanged.connect(self.record_history)
         self.buffer_widget.titleChanged.connect(self.change_title)
 
         self.buffer_widget.translate_selected_text.connect(translate_text)
@@ -115,6 +98,29 @@ class AppBuffer(BrowserBuffer):
         self.buffer_widget.loadFinished.connect(lambda : self.buffer_widget.zoom_reset())
 
         self.buffer_widget.create_new_window = self.create_new_window
+
+    def load_history(self):
+        self.history_list = []
+        if get_emacs_var("eaf-browser-remember-history"):
+            self.history_log_file_path = os.path.join(self.config_dir, "browser", "history", "log.txt")
+
+            self.history_pattern = re.compile("^(.+)ᛝ(.+)ᛡ(.+)$")
+            self.noprefix_url_pattern = re.compile("^(https?|file)://(.+)")
+            self.nopostfix_url_pattern = re.compile("^[^#\?]*")
+            self.history_close_file_path = os.path.join(self.config_dir, "browser", "history", "close.txt")
+            touch(self.history_log_file_path)
+            with open(self.history_log_file_path, "r", encoding="utf-8") as f:
+                raw_list = f.readlines()
+                for raw_his in raw_list:
+                    his_line = re.match(self.history_pattern, raw_his)
+                    if his_line is None: # Obsolete Old history format
+                        old_his = re.match("(.*)\s((https?|file):[^\s]+)$", raw_his)
+                        if old_his is not None:
+                            self.history_list.append(HistoryPage(old_his.group(1), old_his.group(2), 1))
+                    else:
+                        self.history_list.append(HistoryPage(his_line.group(1), his_line.group(2), his_line.group(3)))
+
+        self.buffer_widget.titleChanged.connect(self.record_history)
 
     def drawForeground(self, painter, rect):
         # Draw progress bar.
