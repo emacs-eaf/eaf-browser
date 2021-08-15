@@ -207,7 +207,7 @@ class AppBuffer(BrowserBuffer):
 
                 aria2_args.append("-d") # daemon
                 aria2_args.append("-c") # continue download
-                aria2_args.append("--auto-file-renaming={}".format(str(get_emacs_var("eaf-browser-aria2-auto-file-renaming"))))
+                aria2_args.append("--auto-file-renaming={}".format(str(get_emacs_var("eaf-browser-aria2-auto-file-renaming")).lower()))
                 aria2_args.append("-d {}".format(os.path.expanduser(get_emacs_var("eaf-browser-download-path"))))
 
                 aria2_proxy_host = get_emacs_var("eaf-browser-aria2-proxy-host")
