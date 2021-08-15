@@ -31,6 +31,7 @@ import re
 import sqlite3
 import subprocess
 import threading
+import time
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
@@ -75,6 +76,7 @@ class AppBuffer(BrowserBuffer):
         self.buffer_widget.urlChanged.connect(self.update_url)
 
         # Draw progressbar.
+        self.dark_mode_var = get_emacs_var("eaf-browser-dark-mode")
         self.caret_browsing_js_raw = None
         self.progressbar_progress = 0
         self.progressbar_color = QColor(get_emacs_var("eaf-emacs-theme-foreground-color"))
@@ -96,6 +98,8 @@ class AppBuffer(BrowserBuffer):
         self.buffer_widget.loadFinished.connect(lambda : self.buffer_widget.zoom_reset())
 
         self.buffer_widget.create_new_window = self.create_new_window
+
+        self.start_loading_time = 0
 
     def load_history(self):
         self.history_list = []
@@ -131,6 +135,8 @@ class AppBuffer(BrowserBuffer):
         ''' Initialize the Progress Bar.'''
         self.is_loading = True
 
+        self.start_loading_time = time.time()
+
         self.progressbar_progress = 0
         self.update()
 
@@ -149,6 +155,8 @@ class AppBuffer(BrowserBuffer):
             self.caret_js_ready = False
             self.update()
         elif progress == 100:
+            print("[EAF] Browser {} loading time: {}s".format(self.url, time.time() - self.start_loading_time))
+
             if self.is_loading:
                 self.is_loading = False
 
@@ -165,14 +173,14 @@ class AppBuffer(BrowserBuffer):
             self.caret_js_ready = True
 
             if self.dark_mode_is_enabled():
-                if get_emacs_var("eaf-browser-dark-mode") == "follow":
+                if self.dark_mode_var == "follow":
                     cursor_foreground_color = self.caret_background_color.name()
                     cursor_background_color = self.caret_foreground_color.name()
                 else:
                     cursor_foreground_color = "#FFF"
                     cursor_background_color = "#000"
             else:
-                if get_emacs_var("eaf-browser-dark-mode") == "follow":
+                if self.dark_mode_var == "follow":
                     cursor_foreground_color = self.caret_background_color.name()
                     cursor_background_color = self.caret_foreground_color.name()
                 else:
@@ -511,9 +519,10 @@ class AppBuffer(BrowserBuffer):
 
     def dark_mode_is_enabled(self):
         ''' Return bool of whether dark mode is enabled.'''
-        return (get_emacs_var("eaf-browser-dark-mode") == "force" or \
-                get_emacs_var("eaf-browser-dark-mode") == True or \
-                (get_emacs_var("eaf-browser-dark-mode") == "follow" and \
+        dark_mode_var = get_emacs_var("eaf-browser-dark-mode")
+        return (dark_mode_var == "force" or \
+                dark_mode_var == True or \
+                (dark_mode_var == "follow" and \
                  get_emacs_var("eaf-emacs-theme-mode") == "dark")) and \
                  not self.url.startswith("devtools://")
 
