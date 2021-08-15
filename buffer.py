@@ -74,8 +74,6 @@ class AppBuffer(BrowserBuffer):
         # Record url when url changed.
         self.buffer_widget.urlChanged.connect(self.update_url)
 
-        self.buffer_widget.urlChanged.connect(self.skip_youtube_ads)
-
         # Draw progressbar.
         self.caret_browsing_js_raw = None
         self.progressbar_progress = 0
@@ -278,18 +276,6 @@ class AppBuffer(BrowserBuffer):
     def set_adblocker(self, url):
         if get_emacs_var("eaf-browser-enable-adblocker") and not self.page_closed:
             self.load_adblocker()
-
-    def skip_youtube_ads(self, url):
-        url = self.buffer_widget.url().toString()
-
-        if (url.startswith("https://www.youtube.com/")) and url != "https://www.youtube.com/":
-            # Trick: add dot after 'com' to get free ad url.
-            urls = url.split("https://www.youtube.com")
-            free_ad_url = "https://www.youtube.com." + urls[1]
-
-            # Use stop and load methods instead setUrl, avoid trigger "urlChanged" signal recursively.
-            self.buffer_widget.stop()
-            self.buffer_widget.load(QUrl(free_ad_url))
 
     def add_password_entry(self):
         if self.pw_autofill_raw == None:
