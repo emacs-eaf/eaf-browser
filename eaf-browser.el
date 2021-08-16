@@ -678,6 +678,8 @@ Otherwise send key 'esc' to browser."
 (defun eaf-open-browser-other-window (url &optional args)
   "Open EAF browser application given a URL and ARGS in other window."
   (interactive "M[EAF/browser] URL: ")
+  (when (< (length (window-list)) 2)
+    (split-window-right))
   (other-window 1)
   (eaf-open (eaf-wrap-url url) "browser" args))
 
