@@ -287,6 +287,7 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
     ("l" . "insert_or_scroll_right")
     ("f" . "insert_or_open_link")
     ("F" . "insert_or_open_link_new_buffer")
+    ("O" . "insert_or_open_link_new_buffer_other_window")
     ("B" . "insert_or_open_link_background_buffer")
     ("c" . "insert_or_caret_at_line")
     ("u" . "insert_or_scroll_down_page")
@@ -671,6 +672,13 @@ Otherwise send key 'esc' to browser."
 (defun eaf-open-browser (url &optional args)
   "Open EAF browser application given a URL and ARGS."
   (interactive "M[EAF/browser] URL: ")
+  (eaf-open (eaf-wrap-url url) "browser" args))
+
+;;;###autoload
+(defun eaf-open-browser-other-window (url &optional args)
+  "Open EAF browser application given a URL and ARGS in other window."
+  (interactive "M[EAF/browser] URL: ")
+  (other-window 1)
   (eaf-open (eaf-wrap-url url) "browser" args))
 
 (defun eaf-open-url-at-point ()
