@@ -439,7 +439,13 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
 
 (defun eaf--create-new-browser-buffer (new-window-buffer-id)
   "Function for creating a new browser buffer with the specified NEW-WINDOW-BUFFER-ID."
-  (let ((eaf-buffer (generate-new-buffer (concat "Browser Popup Window " new-window-buffer-id))))
+  (let ((eaf-buffer
+         ;; Create a buffer which name look like first buffer (but
+         ;; different). this can prevent mode-line flicker. the
+         ;; buffer's name will be changed to title when title is
+         ;; ready.
+         (generate-new-buffer
+          (concat (buffer-name (car (buffer-list))) " "))))
     (with-current-buffer eaf-buffer
       (eaf--gen-keybinding-map (eaf--get-app-bindings "browser"))
       (eaf-mode)
