@@ -526,6 +526,14 @@ class AppBuffer(BrowserBuffer):
                  get_emacs_var("eaf-emacs-theme-mode") == "dark")) and \
                  not self.url.startswith("devtools://")
 
+    def init_web_page_background(self):
+        if self.dark_mode_is_enabled():
+            # If dark mode enable, use Darkreader.js background color.
+            self.buffer_widget.web_page.setBackgroundColor(QColor("#242525"))
+        else:
+            # Otherwise use white, because most website is use white background.
+            self.buffer_widget.web_page.setBackgroundColor(QColor("#FFFFFF"))
+
 class HistoryPage():
     def __init__(self, title, url, hit):
         self.title = title
