@@ -437,6 +437,9 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
             (bookmark-save)
             (message "Import success.")))))))
 
+;; Fix warn.
+(defvar eaf-mode-line-format)
+
 (defun eaf--create-new-browser-buffer (new-window-buffer-id)
   "Function for creating a new browser buffer with the specified NEW-WINDOW-BUFFER-ID."
   (let ((eaf-buffer
@@ -449,6 +452,8 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
     (with-current-buffer eaf-buffer
       (eaf--gen-keybinding-map (eaf--get-app-bindings "browser"))
       (eaf-mode)
+      (setq-local mode-line-format
+                  (or eaf-mode-line-format mode-line-format))
       (set (make-local-variable 'eaf--buffer-id) new-window-buffer-id)
       (set (make-local-variable 'eaf--buffer-url) "")
       (set (make-local-variable 'eaf--buffer-app-name) "browser"))
