@@ -452,8 +452,7 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
     (with-current-buffer eaf-buffer
       (eaf--gen-keybinding-map (eaf--get-app-bindings "browser"))
       (eaf-mode)
-      (setq-local mode-line-format
-                  (or eaf-mode-line-format mode-line-format))
+      (setq-local mode-line-format eaf-mode-line-format)
       (set (make-local-variable 'eaf--buffer-id) new-window-buffer-id)
       (set (make-local-variable 'eaf--buffer-url) "")
       (set (make-local-variable 'eaf--buffer-app-name) "browser"))
