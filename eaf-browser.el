@@ -452,7 +452,10 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
       (set (make-local-variable 'eaf--buffer-id) new-window-buffer-id)
       (set (make-local-variable 'eaf--buffer-url) "")
       (set (make-local-variable 'eaf--buffer-app-name) "browser"))
-    (switch-to-buffer eaf-buffer)))
+    (switch-to-buffer eaf-buffer)
+    ;; When user open new window by click link, we should clean
+    ;; minibuffer's message, for it may be show useless info.
+    (message nil)))
 
 (defun eaf-browser--duplicate-page-in-new-tab (url)
   "Duplicate a new tab for the dedicated URL."
