@@ -50,17 +50,13 @@ class AppBuffer(BrowserBuffer):
             self.buffer_widget.setUrl(QUrl(url))
 
         # Init emacs vars.
-        (self.dark_mode_var, self.caret_foreground_color,
-         self.caret_background_color, self.progressbar_color,
+        (self.dark_mode_var,
          self.remember_history, self.blank_page_url,
          self.enable_adblocker, self.enable_autofill,
          self.aria2_auto_file_renaming, self.aria2_proxy_host, self.aria2_proxy_port,
          self.chrome_history_file,
          self.translate_language) = get_emacs_vars([
              "eaf-browser-dark-mode",
-             "eaf-emacs-theme-background-color",
-             "eaf-emacs-theme-foreground-color",
-             "eaf-emacs-theme-foreground-color",
              "eaf-browser-remember-history",
              "eaf-browser-blank-page-url",
              "eaf-browser-enable-adblocker",
@@ -143,7 +139,7 @@ class AppBuffer(BrowserBuffer):
     def drawForeground(self, painter, rect):
         # Draw progress bar.
         if self.progressbar_progress > 0 and self.progressbar_progress < 100:
-            painter.setBrush(QColor(self.progressbar_color))
+            painter.setBrush(QColor(self.theme_foreground_color))
             painter.drawRect(0, 0, rect.width() * self.progressbar_progress * 1.0 / 100, self.progressbar_height)
 
     @QtCore.pyqtSlot()
@@ -190,15 +186,15 @@ class AppBuffer(BrowserBuffer):
 
             if self.dark_mode_is_enabled():
                 if self.dark_mode_var == "follow":
-                    cursor_foreground_color = self.caret_background_color
-                    cursor_background_color = self.caret_foreground_color
+                    cursor_foreground_color = self.theme_foreground_color
+                    cursor_background_color = self.theme_background_color
                 else:
                     cursor_foreground_color = "#FFF"
                     cursor_background_color = "#000"
             else:
                 if self.dark_mode_var == "follow":
-                    cursor_foreground_color = self.caret_background_color
-                    cursor_background_color = self.caret_foreground_color
+                    cursor_foreground_color = self.theme_foreground_color
+                    cursor_background_color = self.theme_background_color
                 else:
                     cursor_foreground_color = "#000"
                     cursor_background_color = "#FFF"
