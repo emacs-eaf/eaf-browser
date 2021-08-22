@@ -531,7 +531,7 @@ class AppBuffer(BrowserBuffer):
         return (dark_mode_var == "force" or \
                 dark_mode_var == True or \
                 (dark_mode_var == "follow" and \
-                 get_emacs_var("eaf-emacs-theme-mode") == "dark")) and \
+                 self.theme_mode == "dark")) and \
                  not self.url.startswith("devtools://")
 
     def init_web_page_background(self):
