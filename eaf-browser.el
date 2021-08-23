@@ -334,6 +334,10 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
     ("<f5>" . "refresh_page")
     ("<f12>" . "open_devtools")
     ("<C-return>" . "eaf-send-ctrl-return-sequence")
+    ("C-<left>" . "eaf-send-ctrl-left-sequence")
+    ("C-<right>" . "eaf-send-ctrl-right-sequence")
+    ("C-<delete>" . "eaf-send-ctrl-delete-sequence")
+    ("C-<backspace>" . "eaf-send-ctrl-backspace-sequence")
     )
   "The keybinding of EAF Browser."
   :type 'cons)
