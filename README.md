@@ -66,6 +66,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `l` | insert_or_scroll_right |
 | `f` | insert_or_open_link |
 | `F` | insert_or_open_link_background_buffer |
+| `O` | insert_or_open_link_new_buffer_other_window |
 | `B` | insert_or_open_link_background_buffer |
 | `c` | insert_or_caret_at_line |
 | `u` | insert_or_scroll_down_page |
@@ -112,4 +113,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `<f5>` | emacs-session-save |
 | `<f12>` | open_devtools |
 | `<C-return>` | eaf-send-ctrl-return-sequence |
-
+| `C-<left>` | eaf-send-ctrl-left-sequence |
+| `C-<right>` | eaf-send-ctrl-right-sequence |
+| `C-<delete>` | eaf-send-ctrl-delete-sequence |
+| `C-<backspace>` | eaf-send-ctrl-backspace-sequence |
