@@ -527,6 +527,7 @@ This function works best if paired with a fuzzy search package."
                                               (match-string 1 history)))))
     (cond (history-url (eaf-open-browser history-url))
           ((eaf-is-valid-web-url history) (eaf-open-browser history))
+          ((eaf-is-valid-web-url (eaf-wrap-url history)) (eaf-open-browser history))
           (t (eaf-search-it history)))))
 
 (defun eaf--create-search-url (search-string &optional search-engine use-user-engine)
