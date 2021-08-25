@@ -23,7 +23,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QUrl, QTimer
 from PyQt5.QtGui import QColor, QCursor, QScreen
 from core.webengine import BrowserBuffer
-from core.utils import touch, interactive, is_port_in_use, eval_in_emacs, message_to_emacs, set_emacs_var, translate_text, open_url_in_new_tab, get_emacs_var, get_emacs_vars, get_emacs_config_dir
+from core.utils import touch, interactive, is_port_in_use, eval_in_emacs, eval_get_result_in_emacs, message_to_emacs, set_emacs_var, translate_text, open_url_in_new_tab, get_emacs_var, get_emacs_vars, get_emacs_config_dir
 from urllib.parse import urlparse
 import urllib
 import os
@@ -82,6 +82,8 @@ class AppBuffer(BrowserBuffer):
                                                             "darkreader.js")).read()
 
         self.close_page.connect(self.record_close_page)
+
+        self.buffer_widget.open_url = self.open_url_or_search_string
 
         self.buffer_widget.titleChanged.connect(self.change_title)
 
@@ -394,6 +396,17 @@ class AppBuffer(BrowserBuffer):
     def new_blank_page(self):
         ''' Open new blank page.'''
         eval_in_emacs('eaf-open', [self.blank_page_url, "browser", "", 't'])
+
+    @interactive(insert_or_do=True)
+    def open_url_or_search_string(self, url):
+        ''' Edit a URL or search a string.'''
+        is_valid_url = eval_get_result_in_emacs('eaf-is-valid-web-url', [url])
+        if is_valid_url:
+            self.buffer_widget.setUrl(QUrl(url))
+        else:
+            search_url = eval_get_result_in_emacs('eaf--create-search-url', [url])
+            self.buffer_widget.setUrl(QUrl(search_url))
+        pass
 
     def _clear_history(self):
         if os.path.exists(self.history_log_file_path):
