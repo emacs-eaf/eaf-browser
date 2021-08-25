@@ -402,7 +402,8 @@ class AppBuffer(BrowserBuffer):
         ''' Edit a URL or search a string.'''
         is_valid_url = get_emacs_func_result('eaf-is-valid-web-url', [url])
         if is_valid_url:
-            self.buffer_widget.setUrl(QUrl(url))
+            wrap_url = get_emacs_func_result('eaf-wrap-url', [url])
+            self.buffer_widget.setUrl(QUrl(wrap_url))
         else:
             search_url = get_emacs_func_result('eaf--create-search-url', [url])
             self.buffer_widget.setUrl(QUrl(search_url))
