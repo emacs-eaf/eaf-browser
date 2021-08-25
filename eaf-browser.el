@@ -529,16 +529,12 @@ This function works best if paired with a fuzzy search package."
           ((eaf-is-valid-web-url history) (eaf-open-browser history))
           (t (eaf-search-it history)))))
 
-;;;###autoload
-(defun eaf-search-it (&optional search-string search-engine)
-  "Use SEARCH-ENGINE search SEARCH-STRING.
+(defun eaf--create-search-url (search-string &optional search-engine use-user-engine)
+  "Create a search-url for SEARCH-STRING using SEARCH-ENGINE.
 
-If called interactively, SEARCH-STRING is defaulted to symbol or region string.
-The user can enter a customized SEARCH-STRING.  SEARCH-ENGINE is defaulted
-to `eaf-browser-default-search-engine' with a prefix arg, the user is able to
-choose a search engine defined in `eaf-browser-search-engines'"
-  (interactive)
-  (let* ((real-search-engine (if current-prefix-arg
+SEARCH-ENGINE is defaulted to `eaf-browser-default-search-engine'.
+When USE-USER-ENGINE is non-nil, user can choose a search engine defined in `eaf-browser-search-engines'"
+  (let* ((real-search-engine (if use-user-engine
                                  (let ((all-search-engine (mapcar #'car eaf-browser-search-engines)))
                                    (completing-read
                                     (format "[EAF/browser] Select search engine (default %s): " eaf-browser-default-search-engine)
@@ -547,19 +543,31 @@ choose a search engine defined in `eaf-browser-search-engines'"
          (link (or (cdr (assoc real-search-engine
                                eaf-browser-search-engines))
                    (error (format "[EAF/browser] Search engine %s is unknown to EAF!" real-search-engine))))
-         (current-symbol (if mark-active
+         (search-url (format link search-string)))
+    search-url))
+
+;;;###autoload
+(defun eaf-search-it (&optional search-string search-engine)
+  "Use SEARCH-ENGINE search SEARCH-STRING.
+
+If called interactively, SEARCH-STRING is defaulted to symbol or region string.
+The user can enter a customized SEARCH-STRING. SEARCH-ENGINE is defaulted
+to `eaf-browser-default-search-engine' with a prefix arg, the user is able to
+choose a search engine defined in `eaf-browser-search-engines'"
+  (interactive)
+  (let* ((current-symbol (if mark-active
                              (if (eq major-mode 'pdf-view-mode)
                                  (progn
                                    (declare-function pdf-view-active-region-text "pdf-view.el")
                                    (car (pdf-view-active-region-text)))
                                (buffer-substring (region-beginning) (region-end)))
                            (symbol-at-point)))
-         (search-url (if search-string
-                         (format link search-string)
-                       (let ((search-string (read-string (format "[EAF/browser] Search (%s): " current-symbol))))
-                         (if (string-blank-p search-string)
-                             (format link current-symbol)
-                           (format link search-string))))))
+         (search-string (if search-string search-string
+                          (let ((search-string (read-string (format "[EAF/browser] Search (%s): " current-symbol))))
+                            (if (string-blank-p search-string) current-symbol
+                              search-string))))
+         (use-user-engine current-prefix-arg)
+         (search-url (eaf--create-search-url search-string search-engine use-user-engine)))
     (eaf-open search-url "browser")))
 
 (defun eaf--exit_fullscreen_request ()
