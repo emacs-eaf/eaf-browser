@@ -198,6 +198,11 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   "Allowed options: DisallowUnknownUrlSchemes, AllowUnknownUrlSchemesFromUserInteraction, or AllowAllUnknownUrlSchemes."
   :type 'string)
 
+(defcustom eaf-browser-reader-mode-style
+  "<style> #readability-page-1 { width: 60%; margin: auto; line-height:1.5; font-size: 18px } </style>"
+  "The string of css style used by reader-mode."
+  :type 'string)
+
 (defcustom eaf-chrome-bookmark-file "~/.config/google-chrome/Default/Bookmarks"
   "The default chrome bookmark file to import."
   :type 'string)
