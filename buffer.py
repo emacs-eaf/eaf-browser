@@ -483,7 +483,7 @@ class AppBuffer(BrowserBuffer):
                 self.refresh_page()
                 message_to_emacs("Cannot parse text content of current page, failed to switch reader mode.")
             else:
-                self.buffer_widget.setHtml("<style> #readability-page-1 { width: 60%; margin: auto; } </style>" + html)
+                self.buffer_widget.setHtml(get_emacs_var("eaf-browser-reader-mode-style") + html)
 
     @interactive(insert_or_do=True)
     def export_text(self):
