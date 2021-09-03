@@ -466,21 +466,24 @@ class AppBuffer(BrowserBuffer):
 
     @interactive(insert_or_do=True)
     def switch_to_reader_mode(self):
-        if self.readability_js == None:
-            self.readability_js = open(os.path.join(os.path.dirname(__file__),
-                                                    "node_modules",
-                                                    "@mozilla",
-                                                    "readability",
-                                                    "Readability.js"
-                                                    ), encoding="utf-8").read()
-
-        self.buffer_widget.eval_js(self.readability_js)
-        html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
-        if html == None:
-            self.refresh_page()
-            message_to_emacs("Cannot parse text content of current page, failed to switch reader mode.")
+        if self.buffer_widget.execute_js("document.getElementById('readability-page-1') != null;"):
+            message_to_emacs("Reader mode has been enable in current page.")
         else:
-            self.buffer_widget.setHtml("<style> #readability-page-1 { width: 60%; margin: auto; } </style>" + html)
+            if self.readability_js == None:
+                self.readability_js = open(os.path.join(os.path.dirname(__file__),
+                                                        "node_modules",
+                                                        "@mozilla",
+                                                        "readability",
+                                                        "Readability.js"
+                                                        ), encoding="utf-8").read()
+
+            self.buffer_widget.eval_js(self.readability_js)
+            html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
+            if html == None:
+                self.refresh_page()
+                message_to_emacs("Cannot parse text content of current page, failed to switch reader mode.")
+            else:
+                self.buffer_widget.setHtml("<style> #readability-page-1 { width: 60%; margin: auto; } </style>" + html)
 
     @interactive(insert_or_do=True)
     def export_text(self):
