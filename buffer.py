@@ -80,6 +80,11 @@ class AppBuffer(BrowserBuffer):
                                                             "node_modules",
                                                             "darkreader",
                                                             "darkreader.js")).read()
+        selection_color = get_emacs_var("eaf-browser-text-selection-color")
+        if selection_color != "auto":
+            self.buffer_widget.dark_mode_js = self.buffer_widget.dark_mode_js.replace("selectionColor: 'auto'", "selectionColor: '" + selection_color + "'")
+        self.buffer_widget.eval_js(self.buffer_widget.dark_mode_js)
+
 
         self.close_page.connect(self.record_close_page)
 

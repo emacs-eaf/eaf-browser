@@ -159,6 +159,12 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
 Default is the foreground color of EAF buffer."
   :type 'string)
 
+(defcustom eaf-browser-text-selection-color "auto"
+  "Possible values are `auto' or a hex code `#hhhhhh' of a color.
+If it is set to `auto', then the selection color will be automatically
+configured by darkreader.js."
+  :type 'string)
+
 (defcustom eaf-browser-blank-page-url "https://www.google.com"
   ""
   :type 'string)
