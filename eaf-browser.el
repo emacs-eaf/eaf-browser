@@ -150,11 +150,17 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   ""
   :type 'string)
 
-(defcustom eaf-browser-progress-bar-height "5"
+(defcustom eaf-browser-progress-bar-height "2"
   ""
   :type 'int)
 
-(defcustom eaf-browser-progress-bar-color "#ff8103"
+(defcustom eaf-browser-progress-bar-color "default"
+  "Possible values are `default' or a hex code `#hhhhhh' of a color.
+If it is set to `default', then the default theme foreground color
+(set by `eaf-emacs-theme-foreground-color') will be used."
+  :type 'string)
+
+(defcustom eaf-browser-text-selection-color "#ffb800"
   ""
   :type 'string)
 

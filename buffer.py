@@ -99,7 +99,11 @@ class AppBuffer(BrowserBuffer):
         self.caret_browsing_js_raw = None
         self.progressbar_progress = 0
         self.progressbar_height = int(get_emacs_var("eaf-browser-progress-bar-height"))
-        self.progressbar_color = get_emacs_var("eaf-browser-progress-bar-color")
+        custom_progressbar_color = get_emacs_var("eaf-browser-progress-bar-color")
+        if custom_progressbar_color == "default":
+            self.progressbar_color = QColor(self.theme_foreground_color)
+        else:
+            self.progressbar_color = QColor(custom_progressbar_color)
         self.buffer_widget.loadStarted.connect(self.start_progress)
         self.buffer_widget.loadProgress.connect(self.update_progress)
         self.is_loading = False
@@ -142,7 +146,7 @@ class AppBuffer(BrowserBuffer):
     def drawForeground(self, painter, rect):
         # Draw progress bar.
         if self.progressbar_progress > 0 and self.progressbar_progress < 100:
-            painter.setBrush(QColor(self.progressbar_color))
+            painter.setBrush(self.progressbar_color)
             painter.drawRect(0, 0, rect.width() * self.progressbar_progress * 1.0 / 100, self.progressbar_height)
 
     @QtCore.pyqtSlot()
