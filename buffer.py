@@ -287,10 +287,12 @@ class AppBuffer(BrowserBuffer):
     def toggle_adblocker(self):
         ''' Change adblocker status.'''
         if self.enable_adblocker:
+            self.enable_adblocker = False
             set_emacs_var("eaf-browser-enable-adblocker", False)
             self.buffer_widget.remove_css('adblocker', True)
             message_to_emacs("Successfully disabled adblocker!")
         elif not self.enable_adblocker:
+            self.enable_adblocker = True
             set_emacs_var("eaf-browser-enable-adblocker", True)
             self.load_adblocker()
             message_to_emacs("Successfully enabled adblocker!")
