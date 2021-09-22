@@ -150,6 +150,14 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   ""
   :type 'string)
 
+(defcustom eaf-browser-progress-bar-height "5"
+  ""
+  :type 'int)
+
+(defcustom eaf-browser-progress-bar-color "#ff8103"
+  ""
+  :type 'string)
+
 (defcustom eaf-browser-blank-page-url "https://www.google.com"
   ""
   :type 'string)
