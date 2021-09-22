@@ -154,14 +154,9 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   ""
   :type 'int)
 
-(defcustom eaf-browser-progress-bar-color "default"
-  "Possible values are `default' or a hex code `#hhhhhh' of a color.
-If it is set to `default', then the default theme foreground color
-(set by `eaf-emacs-theme-foreground-color') will be used."
-  :type 'string)
-
-(defcustom eaf-browser-text-selection-color "#ffb800"
-  ""
+(defcustom eaf-browser-progress-bar-color (eaf-get-theme-foreground-color)
+  "Color of progress bar in hex code `#hhhhhh'.
+Default is the foreground color of EAF buffer."
   :type 'string)
 
 (defcustom eaf-browser-blank-page-url "https://www.google.com"

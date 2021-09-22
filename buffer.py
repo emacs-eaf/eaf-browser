@@ -99,11 +99,7 @@ class AppBuffer(BrowserBuffer):
         self.caret_browsing_js_raw = None
         self.progressbar_progress = 0
         self.progressbar_height = int(get_emacs_var("eaf-browser-progress-bar-height"))
-        custom_progressbar_color = get_emacs_var("eaf-browser-progress-bar-color")
-        if custom_progressbar_color == "default":
-            self.progressbar_color = QColor(self.theme_foreground_color)
-        else:
-            self.progressbar_color = QColor(custom_progressbar_color)
+        self.progressbar_color = QColor(get_emacs_var("eaf-browser-progress-bar-color"))
         self.buffer_widget.loadStarted.connect(self.start_progress)
         self.buffer_widget.loadProgress.connect(self.update_progress)
         self.is_loading = False
