@@ -369,6 +369,11 @@ configured by darkreader.js."
   "The key alias of EAF Browser."
   :type 'cons)
 
+(defun eaf--browser-update-position (position-percentage)
+  "Format mode line position indicator to show the current position in percentage."
+  (setq-local mode-line-position `(,position-percentage))
+  (force-mode-line-update))
+
 (defun eaf-browser-restore-buffers ()
   "EAF restore all opened EAF Browser buffers in the previous Emacs session.
 

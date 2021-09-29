@@ -109,6 +109,9 @@ class AppBuffer(BrowserBuffer):
         self.buffer_widget.loadProgress.connect(self.update_progress)
         self.is_loading = False
 
+        # Update page position
+        self.buffer_widget.web_page.scrollPositionChanged.connect(self.update_position)
+
         # Reset to default zoom when page init or page url changed.
         self.reset_default_zoom()
         self.buffer_widget.urlChanged.connect(lambda url: self.reset_default_zoom())
@@ -214,6 +217,13 @@ class AppBuffer(BrowserBuffer):
         self.init_pw_autofill()
         if self.enable_adblocker:
             self.load_adblocker()
+
+    def update_position(self):
+        position = self.buffer_widget.web_page.scrollPosition().y();
+        view_height = self.buffer_widget.height()
+        page_height = self.buffer_widget.web_page.contentsSize().height()
+        pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
+        eval_in_emacs("eaf--browser-update-position", [pos_percentage])
 
     def handle_input_response(self, callback_tag, result_content):
         ''' Handle input message.'''
