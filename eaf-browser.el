@@ -276,7 +276,7 @@ configured by darkreader.js."
     ("C-v" . "scroll_up_page")
     ("C-y" . "yank_text")
     ("C-w" . "kill_text")
-    ("M-e" . "atomic_edit")
+    ("M-e" . "edit_atomic_or_search_text")
     ("M-c" . "caret_toggle_browsing")
     ("M-D" . "select_text")
     ("M-s" . "open_link")
