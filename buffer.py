@@ -23,7 +23,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QUrl, QTimer
 from PyQt5.QtGui import QColor, QCursor, QScreen
 from core.webengine import BrowserBuffer
-from core.utils import touch, interactive, is_port_in_use, eval_in_emacs, get_emacs_func_result, message_to_emacs, set_emacs_var, translate_text, open_url_in_new_tab, get_emacs_var, get_emacs_vars, get_emacs_config_dir
+from core.utils import touch, interactive, is_port_in_use, eval_in_emacs, get_emacs_func_result, message_to_emacs, set_emacs_var, translate_text, open_url_in_new_tab, get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui
 from urllib.parse import urlparse
 import urllib
 import os
@@ -414,6 +414,16 @@ class AppBuffer(BrowserBuffer):
     def new_blank_page(self):
         ''' Open new blank page.'''
         eval_in_emacs('eaf-open', [self.blank_page_url, "browser", "", 't'])
+
+    @interactive(insert_or_do=True)
+    def change_url(self, url):
+        # _change_url use PostGui make sure change url in main thread.
+        self._change_url(url)
+
+    @PostGui()
+    def _change_url(self, url):
+        self.buffer_widget.stop()
+        self.buffer_widget.setUrl(QUrl(url))
 
     @interactive(insert_or_do=True)
     def open_url_or_search_string(self, url):
