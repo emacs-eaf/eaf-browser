@@ -151,7 +151,9 @@ class AppBuffer(BrowserBuffer):
         # Draw progress bar.
         if self.progressbar_progress > 0 and self.progressbar_progress < 100:
             painter.setBrush(self.progressbar_color)
-            painter.drawRect(0, 0, rect.width() * self.progressbar_progress * 1.0 / 100, self.progressbar_height)
+            painter.drawRect(0, 0,
+                             int(rect.width() * self.progressbar_progress * 1.0 / 100),
+                             int(self.progressbar_height))
 
     @QtCore.pyqtSlot()
     def start_progress(self):
