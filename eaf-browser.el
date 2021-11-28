@@ -7,7 +7,7 @@
 ;; Copyright (C) 2021, Andy Stewart, all rights reserved.
 ;; Created: 2021-07-20 22:30:28
 ;; Version: 0.1
-;; Last-Updated: Sat Jul 31 11:30:12 2021 (-0400)
+;; Last-Updated: Sun Nov 28 02:42:11 2021 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: http://www.emacswiki.org/emacs/download/eaf-browser.el
 ;; Keywords:
@@ -84,6 +84,10 @@
 
 ;;; Code:
 
+(defgroup eaf-browser nil
+  "The Browser application of Emacs application framework."
+  :group 'eaf)
+
 (defcustom eaf-browser-search-engines `(("google" . "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s")
                                         ("duckduckgo" . "https://duckduckgo.com/?q=%s")
                                         ("bing" . "https://bing.com/search?q=%s"))
@@ -119,39 +123,41 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   :type 'boolean)
 
 (defcustom eaf-browser-enable-plugin t
-  ""
+  "If non-nil, enable QtWebEngine plugins for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-enable-adblocker nil
-  ""
+  "If non-nil, enable adblocker for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-enable-autofill nil
-  ""
+  "If non-nil, enable autofill password for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-enable-javascript t
-  ""
+  "If non-nil, enable javascript for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-enable-scrollbar nil
-  ""
+  "If non-nil, enable scroll bar for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-remember-history t
-  ""
+  "If non-nil, remember browsing history for EAF Browser.
+
+The history file is stored in .emacs.d/eaf/browser/history/log.txt"
   :type 'boolean)
 
 (defcustom eaf-browser-default-zoom 1.0
-  ""
+  "Set the default zoom factor for EAF Browser."
   :type 'float)
 
 (defcustom eaf-browser-font-family ""
-  ""
+  "Set font family for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-progress-bar-height "2"
-  ""
+  "Set progress bar height for EAF Browser."
   :type 'int)
 
 (defcustom eaf-browser-progress-bar-color (eaf-get-theme-foreground-color)
@@ -166,43 +172,44 @@ configured by darkreader.js."
   :type 'string)
 
 (defcustom eaf-browser-blank-page-url "https://www.google.com"
-  ""
-  :type 'string)
-
-(defcustom eaf-browser-scroll-behavior "auto"
-  ""
+  "Set the blank page url for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-download-path "~/Downloads"
-  ""
+  "Set the download path for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-aria2-proxy-host ""
-  ""
+  "Set proxy host for aria2 downloader for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-aria2-proxy-port ""
-  ""
+  "Set proxy port for aria2 downloader for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-aria2-auto-file-renaming nil
-  ""
+  "If non-nil, aria2 downloader will auto rename files for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-dark-mode "follow"
-  ""
+  "Configure the dark mode setting for EAF Browser.
+
+Options:
+- \"follow\" to follow Emacs theme
+- \"force\" to force dark mode
+- nil to disable dark mode"
   :type 'string)
 
 (defcustom eaf-browser-pc-user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0"
-  ""
+  "Simulate a PC User-Agent for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-phone-user-agent "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a Safari/604.1"
-  ""
+  "Simulate a Phone User-Agent for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-chrome-history-file "~/.config/google-chrome/Default/History"
-  ""
+  "Set the chrome history file when exporting chrome history."
   :type 'string)
 
 (defcustom eaf-browser-translate-language ""
