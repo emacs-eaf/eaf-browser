@@ -7,7 +7,7 @@
 ;; Copyright (C) 2021, Andy Stewart, all rights reserved.
 ;; Created: 2021-07-20 22:30:28
 ;; Version: 0.1
-;; Last-Updated: Sun Nov 28 02:42:11 2021 (-0500)
+;; Last-Updated: Sat Dec 11 14:47:23 2021 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: http://www.emacswiki.org/emacs/download/eaf-browser.el
 ;; Keywords:
@@ -147,6 +147,11 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
 
 The history file is stored in .emacs.d/eaf/browser/history/log.txt"
   :type 'boolean)
+
+(defcustom eaf-browser-ignore-history-list
+  '("google.com/search")
+  "A list of case insensitive regexp URL to ignore when saving EAF Browser history."
+  :type 'cons)
 
 (defcustom eaf-browser-default-zoom 1.0
   "Set the default zoom factor for EAF Browser."

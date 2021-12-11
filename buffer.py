@@ -372,12 +372,21 @@ class AppBuffer(BrowserBuffer):
             else:
                 message_to_emacs("Successfully changed password autofill id!")
 
+    def is_good_history(self, history, new_url, ignore_history_list):
+        for ignore_history in ignore_history_list:
+            match = re.search(ignore_history, history.url, re.IGNORECASE)
+            if match:
+                return False
+        return history.url == new_url or history.hit > 1
+
     def _record_history(self, new_title, new_url):
         # Throw traceback info if algorithm has bug and protection of historical record is not erased.
         try:
             noprefix_new_url_match = re.match(self.noprefix_url_pattern, new_url)
+            ignore_history_list = get_emacs_var("eaf-browser-ignore-history-list")
             if noprefix_new_url_match is not None:
-                found = False
+                found_url = False
+                found_parent = False
                 for history in self.history_list:
                     noprefix_url_match = re.match(self.noprefix_url_pattern, history.url)
                     if noprefix_url_match is not None:
@@ -385,19 +394,26 @@ class AppBuffer(BrowserBuffer):
                         noprefix_new_url = noprefix_new_url_match.group(2)
                         nopostfix_new_url_match = re.match(self.nopostfix_url_pattern, noprefix_new_url)
 
-                        if noprefix_url == noprefix_new_url: # found unique url
+                        if nopostfix_new_url_match is not None and noprefix_url == nopostfix_new_url_match.group():
+                            # increment parent url
+                            history.hit += 0.25
+                            found_parent = True
+                            if found_url:
+                                break
+                        if noprefix_url == noprefix_new_url: # found_url unique url
                             history.title = new_title
                             history.url = new_url
                             history.hit += 0.5
-                            found = True
-                        elif nopostfix_new_url_match is not None and noprefix_url == nopostfix_new_url_match.group():
-                            # also increment parent
-                            history.hit += 0.25
+                            found_url = True
+                            if found_parent:
+                                break
 
-                if not found:
+                if not found_url:
                     self.history_list.append(HistoryPage(new_title, new_url, 1))
 
             self.history_list.sort(key = lambda x: x.hit, reverse = True)
+
+            self.history_list = [history for history in self.history_list if self.is_good_history(history, new_url, ignore_history_list)]
 
             with open(self.history_log_file_path, "w", encoding="utf-8") as f:
                 f.writelines(map(lambda history: history.title + "ᛝ" + history.url + "ᛡ" + str(history.hit) + "\n", self.history_list))
