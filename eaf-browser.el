@@ -624,7 +624,7 @@ Otherwise send key 'esc' to browser."
   "Return non-nil if current page is loading."
   (interactive)
   (when (and (string= eaf--buffer-app-name "browser")
-             (string= (eaf-call-sync "call_function" eaf--buffer-id "page_is_loading") "True"))))
+             (string= (eaf-call-sync "execute_function" eaf--buffer-id "page_is_loading") "True"))))
 
 (defun eaf--browser-export-text (buffer-name html-text)
   (let ((eaf-export-text-buffer (get-buffer-create buffer-name)))
