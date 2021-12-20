@@ -617,7 +617,7 @@ choose a search engine defined in `eaf-browser-search-engines'"
 Otherwise send key 'esc' to browser."
   (interactive)
   (if eaf-fullscreen-p
-      (eaf-call-async "execute_function" eaf--buffer-id "exit_fullscreen" "<escape>")
+      (eaf-call-async "eval_function" eaf--buffer-id "exit_fullscreen" "<escape>")
     (eaf-call-async "send_key" eaf--buffer-id "<escape>")))
 
 (defun eaf-browser-is-loading ()
