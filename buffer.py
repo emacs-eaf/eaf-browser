@@ -364,11 +364,13 @@ class AppBuffer(BrowserBuffer):
             set_emacs_var("eaf-browser-enable-autofill", True)
             self.pw_autofill_id = self.pw_autofill_gen_id(0)
             message_to_emacs("Successfully enabled autofill!")
+            self.enable_autofill = True
         else:
             self.pw_autofill_id = self.pw_autofill_gen_id(self.pw_autofill_id)
             if self.pw_autofill_id == 0:
                 set_emacs_var("eaf-browser-enable-autofill", False)
                 message_to_emacs("Successfully disabled password autofill!")
+                self.enable_autofill = False
             else:
                 message_to_emacs("Successfully changed password autofill id!")
 
