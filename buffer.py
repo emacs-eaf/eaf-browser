@@ -403,9 +403,8 @@ class AppBuffer(BrowserBuffer):
                             if found_url:
                                 break
                         if noprefix_url == noprefix_new_url: # found_url unique url
-                            if history.url != new_url:
-                                history.title = new_title
-                                history.url = new_url
+                            history.title = new_title
+                            history.url = new_url
                             history.hit += 0.5
                             found_url = True
                             if found_parent:
