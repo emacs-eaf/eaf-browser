@@ -7,7 +7,7 @@
 ;; Copyright (C) 2021, Andy Stewart, all rights reserved.
 ;; Created: 2021-07-20 22:30:28
 ;; Version: 0.1
-;; Last-Updated: Sat Dec 11 14:47:23 2021 (-0500)
+;; Last-Updated: Fri Jan 14 05:10:04 2022 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: http://www.emacswiki.org/emacs/download/eaf-browser.el
 ;; Keywords:
@@ -149,7 +149,7 @@ The history file is stored in .emacs.d/eaf/browser/history/log.txt"
   :type 'boolean)
 
 (defcustom eaf-browser-ignore-history-list
-  '("google.com/search")
+  '("google.com/search" "file://")
   "A list of case insensitive regexp URL to ignore when saving EAF Browser history."
   :type 'cons)
 
