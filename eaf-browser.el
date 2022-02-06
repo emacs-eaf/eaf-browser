@@ -7,7 +7,7 @@
 ;; Copyright (C) 2021, Andy Stewart, all rights reserved.
 ;; Created: 2021-07-20 22:30:28
 ;; Version: 0.1
-;; Last-Updated: Fri Jan 14 05:10:04 2022 (-0500)
+;; Last-Updated: Sun Feb  6 15:25:47 2022 (-0500)
 ;;           By: Mingde (Matthew) Zeng
 ;; URL: http://www.emacswiki.org/emacs/download/eaf-browser.el
 ;; Keywords:
@@ -155,6 +155,10 @@ The history file is stored in .emacs.d/eaf/browser/history/log.txt"
 
 (defcustom eaf-browser-default-zoom 1.0
   "Set the default zoom factor for EAF Browser."
+  :type 'float)
+
+(defcustom eaf-browser-scroll-step 400
+  "Set the scroll step for EAF Browser, increase/decrease for bigger/smaller steps."
   :type 'float)
 
 (defcustom eaf-browser-font-family ""
