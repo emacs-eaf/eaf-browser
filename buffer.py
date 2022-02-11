@@ -19,19 +19,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtCore import QUrl, QTimer
-from PyQt5.QtGui import QColor, QCursor, QScreen
-from core.webengine import BrowserBuffer
+from PyQt5.QtCore import QUrl, pyqtSlot
+from PyQt5.QtGui import QColor
 from core.utils import touch, interactive, is_port_in_use, eval_in_emacs, get_emacs_func_result, message_to_emacs, set_emacs_var, translate_text, open_url_in_new_tab, get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui
-from urllib.parse import urlparse
-import urllib
+from core.webengine import BrowserBuffer
 import os
 import re
-import sqlite3
-import subprocess
 import threading
 import time
+import urllib
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
@@ -155,7 +151,7 @@ class AppBuffer(BrowserBuffer):
                              int(rect.width() * self.progressbar_progress * 1.0 / 100),
                              int(self.progressbar_height))
 
-    @QtCore.pyqtSlot()
+    @pyqtSlot()
     def start_progress(self):
         ''' Initialize the Progress Bar.'''
         self.is_loading = True
@@ -165,7 +161,7 @@ class AppBuffer(BrowserBuffer):
         self.progressbar_progress = 0
         self.update()
 
-    @QtCore.pyqtSlot(int)
+    @pyqtSlot(int)
     def update_progress(self, progress):
         ''' Update the Progress Bar.'''
         self.progressbar_progress = progress
@@ -255,6 +251,7 @@ class AppBuffer(BrowserBuffer):
                 aria2_args.append("--enable-rpc")
                 aria2_args.append("--rpc-listen-all")
 
+                import subprocess
                 subprocess.Popen(aria2_args, stdout=null_file)
 
     @interactive(insert_or_do=True)
@@ -323,6 +320,7 @@ class AppBuffer(BrowserBuffer):
         self.buffer_widget.eval_js(self.pw_autofill_raw.replace("%1", "''"))
         password, form_data = self.buffer_widget.execute_js("retrievePasswordFromPage();")
         if password != "":
+            from urllib.parse import urlparse
             self.autofill.add_entry(urlparse(self.current_url).hostname, password, form_data)
             message_to_emacs("Successfully recorded this page's password!")
             return True
@@ -334,6 +332,7 @@ class AppBuffer(BrowserBuffer):
         if self.pw_autofill_raw == None:
             self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
 
+        from urllib.parse import urlparse
         result = self.autofill.get_entries(urlparse(self.url).hostname, id)
         new_id = 0
         for row in result:
@@ -470,6 +469,8 @@ class AppBuffer(BrowserBuffer):
         self.send_input_message("Are you sure you want to clear all browsing history?", "clear_history", "yes-or-no")
 
     def _import_chrome_history(self):
+        import sqlite3
+        
         dbpath = os.path.expanduser(self.chrome_history_file)
         if not os.path.exists(dbpath):
             message_to_emacs("The chrome history file: '{}' not exist, please check your setting.".format(dbpath))
@@ -615,6 +616,8 @@ class HistoryPage():
 
 class PasswordDb(object):
     def __init__(self, dbpath):
+        import sqlite3
+        
         self._conn = sqlite3.connect(dbpath)
         self._conn.execute("""
         CREATE TABLE IF NOT EXISTS autofill
