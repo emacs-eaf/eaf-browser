@@ -426,8 +426,7 @@ class AppBuffer(BrowserBuffer):
         ''' Record browser history.'''
         new_url = self.buffer_widget.filter_url(self.buffer_widget.get_url())
         if self.remember_history and self.buffer_widget.filter_title(new_title) != "" and \
-           self.arguments != "temp_html_file" and new_title != "about:blank" and new_url != "about:blank" and \
-               "file://" not in new_url:
+           self.arguments != "temp_html_file" and new_title != "about:blank" and new_url != "about:blank":
             self._record_history(new_title, new_url)
 
     @interactive(insert_or_do=True)
