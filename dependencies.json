@@ -2,6 +2,9 @@
   "pacman": [
     "aria2"
   ],
+  "emerge": [
+    "net-misc/aria2"
+  ],
   "apt": [
     "aria2"
   ],
