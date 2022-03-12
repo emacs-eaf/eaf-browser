@@ -21,7 +21,11 @@
 
 from PyQt5.QtCore import QUrl, pyqtSlot
 from PyQt5.QtGui import QColor
-from core.utils import touch, interactive, is_port_in_use, eval_in_emacs, get_emacs_func_result, message_to_emacs, set_emacs_var, translate_text, open_url_in_new_tab, get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui
+from core.utils import (touch, interactive, is_port_in_use, 
+                        eval_in_emacs, get_emacs_func_result, 
+                        message_to_emacs, set_emacs_var, 
+                        translate_text, open_url_in_new_tab, 
+                        get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui)
 from core.webengine import BrowserBuffer
 import os
 import re
