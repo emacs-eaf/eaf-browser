@@ -749,7 +749,14 @@ Otherwise send key 'esc' to browser."
 (defun eaf-open-url-at-point ()
   "Open URL at current point by EAF browser."
   (interactive)
-  (eaf-open-browser (browse-url-url-at-point)))
+  (eaf-open-browser (eaf-pick-url-under-cursor)))
+
+(defun eaf-pick-url-under-cursor ()
+  (if (eq major-mode 'org-mode)
+      (let ((object (org-element-context)))
+        (when (eq (car object) 'link)
+          (org-element-property :raw-link object)))
+    (browse-url-url-at-point)))
 
 (defun eaf-toggle-proxy()
   "Toggle proxy to none or default proxy."
