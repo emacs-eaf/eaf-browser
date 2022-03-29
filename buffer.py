@@ -19,8 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import QUrl, pyqtSlot
-from PyQt5.QtGui import QColor
+from PyQt6.QtCore import QUrl, pyqtSlot
+from PyQt6.QtGui import QColor
 from core.utils import (touch, interactive, is_port_in_use, 
                         eval_in_emacs, get_emacs_func_result, 
                         message_to_emacs, set_emacs_var, 
