@@ -76,15 +76,7 @@ class AppBuffer(BrowserBuffer):
 
         self.readability_js = None
 
-        self.buffer_widget.dark_mode_js = open(os.path.join(os.path.dirname(__file__),
-                                                            "node_modules",
-                                                            "darkreader",
-                                                            "darkreader.js")).read()
-        selection_color = get_emacs_var("eaf-browser-text-selection-color")
-        if selection_color != "auto":
-            self.buffer_widget.dark_mode_js = self.buffer_widget.dark_mode_js.replace("selectionColor: 'auto'", "selectionColor: '" + selection_color + "'")
-        self.buffer_widget.eval_js(self.buffer_widget.dark_mode_js)
-
+        self.buffer_widget.init_dark_mode_js(__file__, get_emacs_var("eaf-browser-text-selection-color"))
 
         self.close_page.connect(self.record_close_page)
 
@@ -169,11 +161,6 @@ class AppBuffer(BrowserBuffer):
     def update_progress(self, progress):
         ''' Update the Progress Bar.'''
         self.progressbar_progress = progress
-
-        # We need load dark mode js always, otherwise will white flash when loading page.
-        if self.is_dark_mode_enabled:
-            self.buffer_widget.load_dark_mode_js()
-            self.buffer_widget.enable_dark_mode()
 
         if progress < 100:
             # Update progress.
