@@ -234,8 +234,10 @@ class AppBuffer(BrowserBuffer):
                 self._clear_history()
             elif callback_tag == "import_chrome_history":
                 self._import_chrome_history()
-            elif callback_tag == "clear_cookies":
-                self._clear_cookies()
+            elif callback_tag == "delete_all_cookies":
+                self._delete_all_cookies()
+            elif callback_tag == "delete_cookie":
+                self._delete_cookie()
 
     def try_start_aria2_daemon(self):
         ''' Try to start aria2 daemon.'''
@@ -507,16 +509,26 @@ class AppBuffer(BrowserBuffer):
         ''' Import history entries from chrome history db.'''
         self.send_input_message("Are you sure you want to import all history from chrome?", "import_chrome_history", "yes-or-no")
 
-    def _clear_cookies(self):
-        ''' Clear cookies.'''
-        self.buffer_widget.cookie_storage.clear_cookies(self.buffer_widget.cookie_store)
-        message_to_emacs("Cleared all cookies.")
+    def _delete_all_cookies(self):
+        ''' Delete all cookies.'''
+        self.buffer_widget.delete_all_cookies()
+        message_to_emacs("Delete all cookies.")
 
     @interactive
-    def clear_cookies(self):
-        ''' Clear cookies.'''
-        self.send_input_message("Are you sure you want to clear all browsing cookies?", "clear_cookies", "yes-or-no")
+    def delete_all_cookies(self):
+        ''' Delete all cookies.'''
+        self.send_input_message("Are you sure you want to delete all browsing cookies?", "delete_all_cookies", "yes-or-no")
 
+    def _delete_cookie(self):
+        ''' Delete cookie of current site.'''
+        self.buffer_widget.delete_cookie()
+        message_to_emacs("Delete cookie of {}.".format(self.buffer_widget.url().host()))
+
+    @interactive
+    def delete_cookie(self):
+        ''' Delete cookie of current site.'''
+        self.send_input_message("Are you sure you want to delete cookie of current site?", "delete_cookie", "yes-or-no")
+        
     @interactive(insert_or_do=True)
     def switch_to_reader_mode(self):
         if self.buffer_widget.execute_js("document.getElementById('readability-page-1') != null;"):

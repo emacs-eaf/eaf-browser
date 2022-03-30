@@ -48,7 +48,8 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `M-w` | copy_text |
 | `M-f` | history_forward |
 | `M-b` | history_backward |
-| `M-q` | clear_cookies |
+| `M-q` | delete_cookie |
+| `M-Q` | delete_all_cookies |
 | `C-t` | toggle_password_autofill |
 | `C-d` | save_page_password |
 | `M-a` | toggle_adblocker |
