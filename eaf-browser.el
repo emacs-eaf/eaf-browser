@@ -122,24 +122,12 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   "If non-nil, move the mouse cursor to the corner when fullscreen in the browser."
   :type 'boolean)
 
-(defcustom eaf-browser-enable-plugin t
-  "If non-nil, enable QtWebEngine plugins for EAF Browser."
-  :type 'boolean)
-
 (defcustom eaf-browser-enable-adblocker nil
   "If non-nil, enable adblocker for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-enable-autofill nil
   "If non-nil, enable autofill password for EAF Browser."
-  :type 'boolean)
-
-(defcustom eaf-browser-enable-javascript t
-  "If non-nil, enable javascript for EAF Browser."
-  :type 'boolean)
-
-(defcustom eaf-browser-enable-scrollbar nil
-  "If non-nil, enable scroll bar for EAF Browser."
   :type 'boolean)
 
 (defcustom eaf-browser-remember-history t
@@ -152,18 +140,6 @@ The history file is stored in .emacs.d/eaf/browser/history/log.txt"
   '("google.com/search" "file://")
   "A list of case insensitive regexp URL to ignore when saving EAF Browser history."
   :type 'cons)
-
-(defcustom eaf-browser-default-zoom 1.0
-  "Set the default zoom factor for EAF Browser."
-  :type 'float)
-
-(defcustom eaf-browser-scroll-step 400
-  "Set the scroll step for EAF Browser, increase/decrease for bigger/smaller steps."
-  :type 'float)
-
-(defcustom eaf-browser-font-family ""
-  "Set font family for EAF Browser."
-  :type 'string)
 
 (defcustom eaf-browser-progress-bar-height "2"
   "Set progress bar height for EAF Browser."
@@ -182,10 +158,6 @@ configured by darkreader.js."
 
 (defcustom eaf-browser-blank-page-url "https://www.google.com"
   "Set the blank page url for EAF Browser."
-  :type 'string)
-
-(defcustom eaf-browser-download-path "~/Downloads"
-  "Set the download path for EAF Browser."
   :type 'string)
 
 (defcustom eaf-browser-aria2-proxy-host ""
@@ -209,24 +181,12 @@ Options:
 - nil to disable dark mode"
   :type 'string)
 
-(defcustom eaf-browser-pc-user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0"
-  "Simulate a PC User-Agent for EAF Browser."
-  :type 'string)
-
-(defcustom eaf-browser-phone-user-agent "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A5370a Safari/604.1"
-  "Simulate a Phone User-Agent for EAF Browser."
-  :type 'string)
-
 (defcustom eaf-browser-chrome-history-file "~/.config/google-chrome/Default/History"
   "Set the chrome history file when exporting chrome history."
   :type 'string)
 
 (defcustom eaf-browser-translate-language ""
   "EAF browser will use current system locale if this option is empty"
-  :type 'string)
-
-(defcustom eaf-browser-unknown-url-scheme-policy "AllowUnknownUrlSchemesFromUserInteraction"
-  "Allowed options: DisallowUnknownUrlSchemes, AllowUnknownUrlSchemesFromUserInteraction, or AllowAllUnknownUrlSchemes."
   :type 'string)
 
 (defcustom eaf-browser-reader-mode-style
