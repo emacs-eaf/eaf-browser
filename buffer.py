@@ -428,16 +428,6 @@ class AppBuffer(BrowserBuffer):
         eval_in_emacs('eaf-open', [self.blank_page_url, "browser", "", 't'])
 
     @interactive(insert_or_do=True)
-    def change_url(self, url):
-        # _change_url use PostGui make sure change url in main thread.
-        self._change_url(url)
-
-    @PostGui()
-    def _change_url(self, url):
-        self.buffer_widget.stop()
-        self.buffer_widget.setUrl(QUrl(url))
-
-    @interactive(insert_or_do=True)
     def open_url_or_search_string(self, url):
         ''' Edit a URL or search a string.'''
         is_valid_url = get_emacs_func_result('eaf-is-valid-web-url', [url])
