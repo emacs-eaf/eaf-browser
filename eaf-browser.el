@@ -717,6 +717,9 @@ Otherwise send key 'esc' to browser."
   (interactive)
   (eaf-call-sync "toggle_proxy"))
 
+(defun eaf-get-mode-line-height ()
+  (face-attribute 'mode-line :height))
+
 (add-to-list 'eaf-app-binding-alist '("browser" . eaf-browser-keybinding))
 
 (setq eaf-browser-module-path (concat (file-name-directory load-file-name) "buffer.py"))

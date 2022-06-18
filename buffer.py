@@ -22,7 +22,7 @@
 from PyQt6.QtCore import QUrl, pyqtSlot
 from PyQt6.QtGui import QColor
 from core.utils import (touch, interactive, is_port_in_use, 
-                        eval_in_emacs, get_emacs_func_result, 
+                        eval_in_emacs, get_emacs_func_result, get_emacs_func_cache_result,
                         message_to_emacs, set_emacs_var, 
                         translate_text, open_url_in_new_tab, 
                         get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui)
@@ -208,11 +208,13 @@ class AppBuffer(BrowserBuffer):
             self.load_adblocker()
 
     def update_position(self):
-        position = self.buffer_widget.web_page.scrollPosition().y();
-        view_height = self.buffer_widget.height()
-        page_height = self.buffer_widget.web_page.contentsSize().height()
-        pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
-        eval_in_emacs("eaf--browser-update-position", [pos_percentage])
+        mode_line_height = get_emacs_func_cache_result("eaf-get-mode-line-height", [])
+        if mode_line_height > 0.1:
+            position = self.buffer_widget.web_page.scrollPosition().y();
+            view_height = self.buffer_widget.height()
+            page_height = self.buffer_widget.web_page.contentsSize().height()
+            pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
+            eval_in_emacs("eaf--browser-update-position", [pos_percentage])
 
     def handle_input_response(self, callback_tag, result_content):
         ''' Handle input message.'''
