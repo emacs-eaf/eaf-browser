@@ -718,7 +718,10 @@ Otherwise send key 'esc' to browser."
   (eaf-call-sync "toggle_proxy"))
 
 (defun eaf-get-mode-line-height ()
-  (face-attribute 'mode-line :height))
+  (let ((mode-line-height (face-attribute 'mode-line :height)))
+    (if (eq mode-line-height 'unspecified)
+        1.0
+      mode-line-height)))
 
 (add-to-list 'eaf-app-binding-alist '("browser" . eaf-browser-keybinding))
 
