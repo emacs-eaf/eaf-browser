@@ -416,7 +416,7 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
 (defun eaf-import-firefox-bookmarks ()
   "Command to import firefox bookmarks."
   (interactive)
-  (when (eaf-read-input "In order to import, you should first backup firefox's bookmarks to a json file. Continue?" "yes-or-no" "")
+  (when (eaf-read-input "In order to import, you should first backup firefox's bookmarks to a json file. Continue?" "yes-or-no" "" "")
     (let ((fx-bookmark-file (read-file-name "Choose firefox bookmark file:")))
       (if (not (file-exists-p fx-bookmark-file))
           (message "Firefox bookmark file: '%s' is not exist." fx-bookmark-file)
@@ -663,7 +663,7 @@ Otherwise send key 'esc' to browser."
 (defun eaf-import-chrome-bookmarks ()
   "Command to import chrome bookmarks."
   (interactive)
-  (when (eaf-read-input "Are you sure to import chrome bookmarks to EAF" "yes-or-no" "")
+  (when (eaf-read-input "Are you sure to import chrome bookmarks to EAF" "yes-or-no" "" "")
     (if (not (file-exists-p eaf-chrome-bookmark-file))
         (message "Chrome bookmark file: '%s' is not exist, check `eaf-chrome-bookmark-file` setting." eaf-chrome-bookmark-file)
       (let ((orig-bookmark-record-fn bookmark-make-record-function)
