@@ -198,6 +198,10 @@ Options:
   "The default chrome bookmark file to import."
   :type 'string)
 
+(defcustom eaf-browser-text-focus-state-p nil
+  "Indicate whether text is being focused"
+  :type 'boolean)
+
 (defcustom eaf-browser-caret-mode-keybinding
   '(("j"   . "caret_next_line")
     ("k"   . "caret_previous_line")
@@ -464,6 +468,7 @@ This should be used after setting `eaf-browser-continue-where-left-off' to t."
     ;; minibuffer's message, for it may be show useless info.
     (message nil)))
 
+
 (defun eaf-browser--duplicate-page-in-new-tab (url)
   "Duplicate a new tab for the dedicated URL."
   (eaf-open (eaf-wrap-url url) "browser" nil t))
@@ -722,6 +727,10 @@ Otherwise send key 'esc' to browser."
     (if (eq mode-line-height 'unspecified)
         1.0
       mode-line-height)))
+
+(defun eaf--sync-text-focus-state (text-focus-status)
+  "Toggle text focus state given TEXT-FOCUS-STATUS."
+  (setq eaf-browser-text-focus-state-p text-focus-status))
 
 (add-to-list 'eaf-app-binding-alist '("browser" . eaf-browser-keybinding))
 
