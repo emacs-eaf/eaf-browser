@@ -204,8 +204,11 @@ class AppBuffer(BrowserBuffer):
     def after_page_load_hook(self):
         ''' Hook to run after update_progress hits 100. '''
         self.init_pw_autofill()
+        
         if self.enable_adblocker:
             self.load_adblocker()
+            
+        eval_in_emacs("eaf-update-focus-state", [self.buffer_widget.buffer_id, self.is_focus()])                    
 
     def update_position(self):
         mode_line_height = get_emacs_func_cache_result("eaf-get-mode-line-height", [])
