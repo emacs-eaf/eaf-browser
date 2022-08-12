@@ -208,7 +208,8 @@ class AppBuffer(BrowserBuffer):
         if self.enable_adblocker:
             self.load_adblocker()
             
-        eval_in_emacs("eaf-update-focus-state", [self.buffer_widget.buffer_id, self.is_focus()])                    
+        # Update input focus state.
+        self.is_focus()
 
     def update_position(self):
         mode_line_height = get_emacs_func_cache_result("eaf-get-mode-line-height", [])
