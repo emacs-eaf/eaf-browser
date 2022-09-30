@@ -160,6 +160,8 @@ class AppBuffer(BrowserBuffer):
     @pyqtSlot(int)
     def update_progress(self, progress):
         ''' Update the Progress Bar.'''
+        self.dark_mode_js_load(progress)
+        
         self.progressbar_progress = progress
 
         if progress < 100:
