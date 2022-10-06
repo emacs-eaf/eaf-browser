@@ -156,6 +156,10 @@ If it is set to `auto', then the selection color will be automatically
 configured by darkreader.js."
   :type 'string)
 
+(defcustom eaf-browser-dark-mode-theme "dark"
+  "Possible values are `dark' or `light' theme of the dark mode."
+  :type 'string)
+
 (defcustom eaf-browser-blank-page-url "https://www.google.com"
   "Set the blank page url for EAF Browser."
   :type 'string)
