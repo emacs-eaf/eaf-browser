@@ -21,10 +21,10 @@
 
 from PyQt6.QtCore import QUrl, pyqtSlot
 from PyQt6.QtGui import QColor
-from core.utils import (touch, interactive, is_port_in_use, 
+from core.utils import (touch, interactive, is_port_in_use,
                         eval_in_emacs, get_emacs_func_result, get_emacs_func_cache_result,
-                        message_to_emacs, set_emacs_var, 
-                        translate_text, open_url_in_new_tab, 
+                        message_to_emacs, set_emacs_var,
+                        translate_text, open_url_in_new_tab,
                         get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui)
 from core.webengine import BrowserBuffer
 import os
@@ -55,7 +55,10 @@ class AppBuffer(BrowserBuffer):
          self.enable_adblocker, self.enable_autofill,
          self.aria2_auto_file_renaming, self.aria2_proxy_host, self.aria2_proxy_port,
          self.chrome_history_file,
-         self.translate_language) = get_emacs_vars([
+         self.translate_language,
+         self.text_selection_color,
+         self.dark_mode_theme
+         ) = get_emacs_vars([
              "eaf-browser-dark-mode",
              "eaf-browser-remember-history",
              "eaf-browser-blank-page-url",
@@ -65,7 +68,9 @@ class AppBuffer(BrowserBuffer):
              "eaf-browser-aria2-proxy-host",
              "eaf-browser-aria2-proxy-port",
              "eaf-browser-chrome-history-file",
-             "eaf-browser-translate-language"])
+             "eaf-browser-translate-language",
+             "eaf-browser-text-selection-color",
+             "eaf-browser-dark-mode-theme"])
 
         # Use thread to avoid slow down open speed.
         threading.Thread(target=self.load_history).start()
@@ -76,7 +81,9 @@ class AppBuffer(BrowserBuffer):
 
         self.readability_js = None
 
-        self.buffer_widget.init_dark_mode_js(__file__, get_emacs_var("eaf-browser-text-selection-color"))
+        self.buffer_widget.init_dark_mode_js(__file__,
+                                             self.text_selection_color,
+                                             self.dark_mode_theme)
 
         self.close_page.connect(self.record_close_page)
 
@@ -161,7 +168,7 @@ class AppBuffer(BrowserBuffer):
     def update_progress(self, progress):
         ''' Update the Progress Bar.'''
         self.dark_mode_js_load(progress)
-        
+
         self.progressbar_progress = progress
 
         if progress < 100:
@@ -206,10 +213,10 @@ class AppBuffer(BrowserBuffer):
     def after_page_load_hook(self):
         ''' Hook to run after update_progress hits 100. '''
         self.init_pw_autofill()
-        
+
         if self.enable_adblocker:
             self.load_adblocker()
-            
+
         # Update input focus state.
         self.is_focus()
 
@@ -460,7 +467,7 @@ class AppBuffer(BrowserBuffer):
 
     def _import_chrome_history(self):
         import sqlite3
-        
+
         dbpath = os.path.expanduser(self.chrome_history_file)
         if not os.path.exists(dbpath):
             message_to_emacs("The chrome history file: '{}' not exist, please check your setting.".format(dbpath))
@@ -513,7 +520,7 @@ class AppBuffer(BrowserBuffer):
     def delete_cookie(self):
         ''' Delete cookie of current site.'''
         self.send_input_message("Are you sure you want to delete cookie of current site?", "delete_cookie", "yes-or-no")
-        
+
     @interactive(insert_or_do=True)
     def switch_to_reader_mode(self):
         if self.buffer_widget.execute_js("document.getElementById('readability-page-1') != null;"):
@@ -617,7 +624,7 @@ class HistoryPage():
 class PasswordDb(object):
     def __init__(self, dbpath):
         import sqlite3
-        
+
         self._conn = sqlite3.connect(dbpath)
         self._conn.execute("""
         CREATE TABLE IF NOT EXISTS autofill
