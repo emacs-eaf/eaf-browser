@@ -121,8 +121,6 @@ class AppBuffer(BrowserBuffer):
         # Otherwise page won't zoom if we call setUrl api in current page.
         self.buffer_widget.loadFinished.connect(lambda : self.buffer_widget.zoom_reset())
 
-        self.buffer_widget.loadFinished.connect(lambda : self.dark_mode_js_load(0))
-
         self.buffer_widget.create_new_window = self.create_new_window
 
         self.start_loading_time = 0
