@@ -55,6 +55,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `M-a` | toggle_adblocker |
 | `C-M-q` | clear_history |
 | `C-M-i` | import_chrome_history |
+| `C-M-s` | import_safari_history |
 | `M-v` | scroll_down_page |
 | `M-<` | watch-other-window-up-line |
 | `M->` | watch-other-window-down-line |

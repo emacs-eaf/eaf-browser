@@ -55,6 +55,7 @@ class AppBuffer(BrowserBuffer):
          self.enable_adblocker, self.enable_autofill,
          self.aria2_auto_file_renaming, self.aria2_proxy_host, self.aria2_proxy_port,
          self.chrome_history_file,
+         self.safari_history_file,
          self.translate_language,
          self.text_selection_color,
          self.dark_mode_theme
@@ -68,6 +69,7 @@ class AppBuffer(BrowserBuffer):
              "eaf-browser-aria2-proxy-host",
              "eaf-browser-aria2-proxy-port",
              "eaf-browser-chrome-history-file",
+             "eaf-browser-safari-history-file",
              "eaf-browser-translate-language",
              "eaf-browser-text-selection-color",
              "eaf-browser-dark-mode-theme"])
@@ -118,6 +120,8 @@ class AppBuffer(BrowserBuffer):
         # Reset zoom after page loading finish.
         # Otherwise page won't zoom if we call setUrl api in current page.
         self.buffer_widget.loadFinished.connect(lambda : self.buffer_widget.zoom_reset())
+
+        self.buffer_widget.loadFinished.connect(lambda : self.dark_mode_js_load(0))
 
         self.buffer_widget.create_new_window = self.create_new_window
 
@@ -234,8 +238,8 @@ class AppBuffer(BrowserBuffer):
         if not BrowserBuffer.handle_input_response(self, callback_tag, result_content):
             if callback_tag == "clear_history":
                 self._clear_history()
-            elif callback_tag == "import_chrome_history":
-                self._import_chrome_history()
+            elif callback_tag == "import_chrome_history" or callback_tag == "import_safari_history":
+                self._import_history(browser_name=callback_tag.split("_")[1])
             elif callback_tag == "delete_all_cookies":
                 self._delete_all_cookies()
             elif callback_tag == "delete_cookie":
@@ -465,10 +469,18 @@ class AppBuffer(BrowserBuffer):
         ''' Clear browsing history.'''
         self.send_input_message("Are you sure you want to clear all browsing history?", "clear_history", "yes-or-no")
 
-    def _import_chrome_history(self):
+    def _import_history(self, browser_name=None):
         import sqlite3
 
-        dbpath = os.path.expanduser(self.chrome_history_file)
+        if browser_name not in ["chrome", "safari"]:
+            message_to_emacs("Failed to get browser_name")
+            return
+
+        if browser_name == "safari":
+            dbpath = os.path.expanduser(self.safari_history_file)
+        else:
+            dbpath = os.path.expanduser(self.chrome_history_file)
+
         if not os.path.exists(dbpath):
             message_to_emacs("The chrome history file: '{}' not exist, please check your setting.".format(dbpath))
             return
@@ -477,24 +489,68 @@ class AppBuffer(BrowserBuffer):
 
         conn = sqlite3.connect(dbpath)
         # Keep lastest entry in dict by last_visit_time asc order.
-        sql = 'select title, url from urls order by last_visit_time asc'
-        # May fetch many by many not fetch all,
-        # but this should called only once, so not important now.
-        try:
-            chrome_histories = conn.execute(sql).fetchall()
-        except sqlite3.OperationalError as e:
-            if e.args[0] == 'database is locked':
-                message_to_emacs("The chrome history file is locked, please close your chrome app first.")
-            else:
-                message_to_emacs("Failed to read chrome history entries: {}.".format(e))
-            return
+        if browser_name == "safari":
+            cursor = conn.cursor()
+            history_items = cursor.execute('SELECT id, url FROM history_items').fetchall()
+            history_visits = cursor.execute('SELECT history_item, visit_time, title FROM history_visits order by visit_time asc').fetchall()
 
-        histories = dict(chrome_histories)  # Drop duplications with same title.
+            max_visit_time = 0
+            max_visit_save_file = os.path.join(os.path.dirname(self.config_dir), "browser", "safari_history_last_update_time.txt")
+            if os.path.exists(max_visit_save_file):
+                with open(max_visit_save_file, "r", encoding="utf-8") as f:
+                    try:
+                        max_visit_time = float(f.read())
+                    except ValueError as e:
+                        message_to_emacs("Failed to read safari_history_last_update_time.txt, error: " + str(e))
+                        max_visit_time = 0
+
+            _histories = {}
+            histories = {}
+            for id, url in history_items:
+                _histories[id] = [url, '']
+
+            for history_item, visit_time, title  in history_visits:
+                if visit_time < max_visit_time:
+                    continue
+
+                if history_item not in _histories:
+                    message_to_emacs("Parse safari history file error.")
+                    return
+
+                _histories[history_item][-1] = (title)
+
+            max_visit_time = history_visits[-1][1]
+            with open(max_visit_save_file, "w") as f:
+                f.write(str(max_visit_time))
+
+            for id, url in history_items:
+                url, title = _histories[id]
+                if title is not None and len(title) > 0:
+                    histories[title] = url
+        else:
+            sql = 'select title, url from urls order by last_visit_time asc'
+            # May fetch many by many not fetch all,
+            # but this should called only once, so not important now.
+            try:
+                histories = conn.execute(sql).fetchall()
+            except sqlite3.OperationalError as e:
+                if e.args[0] == 'database is locked':
+                    message_to_emacs("The chrome history file is locked, please close your chrome app first.")
+                else:
+                    message_to_emacs("Failed to read chrome history entries: {}.".format(e))
+                return
+
+        histories = dict(histories)  # Drop duplications with same title.
         total = len(histories)
         for i, (title, url) in enumerate(histories.items(), 1):
             self._record_history(title, url)
             message_to_emacs("Importing {} / {} ...".format(i, total))
-            message_to_emacs("{} chrome history entries imported.".format(total))
+        message_to_emacs("{} {} history entries imported.".format(total, browser_name))
+
+    @interactive
+    def import_safari_history(self):
+        ''' Import history entries from safari history db.'''
+        self.send_input_message("Are you sure you want to import all history from safari?", "import_safari_history", "yes-or-no")
 
     @interactive
     def import_chrome_history(self):

@@ -189,6 +189,10 @@ Options:
   "Set the chrome history file when exporting chrome history."
   :type 'string)
 
+(defcustom eaf-browser-safari-history-file "~/Library/Safari/History.db"
+  "Set the chrome history file when exporting chrome history."
+  :type 'string)
+
 (defcustom eaf-browser-translate-language ""
   "EAF browser will use current system locale if this option is empty"
   :type 'string)
@@ -274,6 +278,7 @@ Options:
     ("M-a" . "toggle_adblocker")
     ("C-M-q" . "clear_history")
     ("C-M-i" . "import_chrome_history")
+    ("C-M-s" . "import_safari_history")
     ("M-v" . "scroll_down_page")
     ("M-<" . "scroll_to_begin")
     ("M->" . "scroll_to_bottom")
