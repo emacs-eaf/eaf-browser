@@ -530,7 +530,7 @@ This function works best if paired with a fuzzy search package."
                    (if history-file-exists
                        (mapcar
                         (lambda (h) (when (string-match history-pattern h)
-                                  (format "[%s] ⇰ %s" (match-string 1 h) (match-string 2 h))))
+                                      (format "[%s] ⇰ %s" (match-string 1 h) (match-string 2 h))))
                         (with-temp-buffer (insert-file-contents browser-history-file-path)
                                           (split-string (buffer-string) "\n" t)))
                      nil)))
@@ -600,16 +600,37 @@ Otherwise send key 'esc' to browser."
   (when (and (string= eaf--buffer-app-name "browser")
              (string= (eaf-call-sync "execute_function" eaf--buffer-id "page_is_loading") "True"))))
 
+(defun eaf--browser-get-window-width (&optional window)
+  "Get WINDOW allocation."
+  (let* ((window-edges (window-pixel-edges window))
+         (x (nth 0 window-edges))
+         (w (- (nth 2 window-edges) x)))
+    w))
+
 (defun eaf--browser-export-text (buffer-name html-text)
   (let ((eaf-export-text-buffer (get-buffer-create buffer-name)))
     (with-current-buffer eaf-export-text-buffer
+      ;; Insert html text.
       (read-only-mode -1)
       (erase-buffer)
       (insert html-text)
+      ;; Convert multiple blank lines to single line.
       (goto-char (point-min))
+      (ignore-errors
+        (while (re-search-forward "\\(^\\s-*$\\)\n" nil t)
+          (replace-match "\n")
+          (forward-char 1)))
+      ;; Try to remove first blank line.
+      (goto-char (point-min))
+      (when (looking-at-p "[[:blank:]]*$")
+        (kill-line))
+      ;; Try olivetti mode.
+      (let ((window-width (/ (eaf--browser-get-window-width) (window-font-width))))
+        (when (featurep 'olivetti)
+          (olivetti-mode 1)
+          (olivetti-set-width (floor (* window-width 0.618)))))
       (read-only-mode 1))
-    (switch-to-buffer eaf-export-text-buffer)
-    ))
+    (switch-to-buffer eaf-export-text-buffer)))
 
 (defun eaf--atomic-edit (buffer-id focus-text)
   "EAF Browser: edit FOCUS-TEXT with Emacs's BUFFER-ID."
