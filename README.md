@@ -101,6 +101,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `v` | insert_or_view_source |
 | `e` | insert_or_edit_url |
 | `n` | insert_or_export_text |
+| `N` | insert_or_render_by_eww |
 | `,` | insert_or_switch_to_reader_mode |
 | `.` | insert_or_translate_text |
 | `;` | insert_or_translate_page |
@@ -122,3 +123,4 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `C-<right>` | eaf-send-ctrl-right-sequence |
 | `C-<delete>` | eaf-send-ctrl-delete-sequence |
 | `C-<backspace>` | eaf-send-ctrl-backspace-sequence |
+

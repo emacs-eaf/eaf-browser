@@ -324,6 +324,7 @@ Options:
     ("v" . "insert_or_view_source")
     ("e" . "insert_or_edit_url")
     ("n" . "insert_or_export_text")
+    ("N" . "insert_or_render_by_eww")
     ("," . "insert_or_switch_to_reader_mode")
     ("." . "insert_or_translate_text")
     (";" . "insert_or_translate_page")
@@ -631,6 +632,17 @@ Otherwise send key 'esc' to browser."
           (olivetti-set-width (floor (* window-width 0.618)))))
       (read-only-mode 1))
     (switch-to-buffer eaf-export-text-buffer)))
+
+(defun eaf--browser-render-by-eww (url filepath)
+  (eww-open-file filepath)
+
+  (setq-local header-line-format (format "EAF Browser: %s" url))
+  
+  ;; Try olivetti mode.
+  (let ((window-width (/ (eaf--browser-get-window-width) (window-font-width))))
+    (when (featurep 'olivetti)
+      (olivetti-mode 1)
+      (olivetti-set-width (floor (* window-width 0.618))))))
 
 (defun eaf--atomic-edit (buffer-id focus-text)
   "EAF Browser: edit FOCUS-TEXT with Emacs's BUFFER-ID."

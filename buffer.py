@@ -575,20 +575,24 @@ class AppBuffer(BrowserBuffer):
         ''' Delete cookie of current site.'''
         self.send_input_message("Are you sure you want to delete cookie of current site?", "delete_cookie", "yes-or-no")
 
+    def load_readability_js(self):
+        if self.readability_js == None:
+            self.readability_js = open(os.path.join(os.path.dirname(__file__),
+                                                    "node_modules",
+                                                    "@mozilla",
+                                                    "readability",
+                                                    "Readability.js"
+                                                    ), encoding="utf-8").read()
+        
+        self.buffer_widget.eval_js(self.readability_js)
+        
     @interactive(insert_or_do=True)
     def switch_to_reader_mode(self):
         if self.buffer_widget.execute_js("document.getElementById('readability-page-1') != null;"):
             message_to_emacs("Reader mode has been enable in current page.")
         else:
-            if self.readability_js == None:
-                self.readability_js = open(os.path.join(os.path.dirname(__file__),
-                                                        "node_modules",
-                                                        "@mozilla",
-                                                        "readability",
-                                                        "Readability.js"
-                                                        ), encoding="utf-8").read()
+            self.load_readability_js()
 
-            self.buffer_widget.eval_js(self.readability_js)
             html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
             if html == None:
                 self.refresh_page()
@@ -598,18 +602,29 @@ class AppBuffer(BrowserBuffer):
 
     @interactive(insert_or_do=True)
     def export_text(self):
-        if self.readability_js == None:
-            self.readability_js = open(os.path.join(os.path.dirname(__file__),
-                                                    "node_modules",
-                                                    "@mozilla",
-                                                    "readability",
-                                                    "Readability.js"
-                                                    ), encoding="utf-8").read()
+        self.load_readability_js()
 
-        self.buffer_widget.eval_js(self.readability_js)
         text = self.buffer_widget.execute_js("new Readability(document).parse().textContent;")
         self.refresh_page()
         eval_in_emacs('eaf--browser-export-text', ["EAF-BROWSER-TEXT-" + self.url, text])
+        
+    @interactive(insert_or_do=True)
+    def render_by_eww(self):
+        self.load_readability_js()
+
+        html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
+        if html == None:
+            self.refresh_page()
+            message_to_emacs("Cannot parse text content of current page, failed to render by eww.")
+        else:
+            import tempfile
+
+            new_file, filename = tempfile.mkstemp(suffix=".html")
+            with os.fdopen(new_file, 'w') as tmp:
+                tmp.write(get_emacs_var("eaf-browser-reader-mode-style") + html)
+            
+            self.refresh_page()
+            eval_in_emacs("eaf--browser-render-by-eww", [self.url, filename])
 
     def page_is_loading(self):
         return self.is_loading
