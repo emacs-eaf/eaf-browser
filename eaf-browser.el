@@ -531,7 +531,7 @@ This function works best if paired with a fuzzy search package."
                    (if history-file-exists
                        (mapcar
                         (lambda (h) (when (string-match history-pattern h)
-                                      (format "[%s] ⇰ %s" (match-string 1 h) (match-string 2 h))))
+                                  (format "[%s] ⇰ %s" (match-string 1 h) (match-string 2 h))))
                         (with-temp-buffer (insert-file-contents browser-history-file-path)
                                           (split-string (buffer-string) "\n" t)))
                      nil)))
@@ -637,7 +637,7 @@ Otherwise send key 'esc' to browser."
   (eww-open-file filepath)
 
   (setq-local header-line-format (format "EAF Browser: %s" url))
-  
+
   ;; Try olivetti mode.
   (let ((window-width (/ (eaf--browser-get-window-width) (window-font-width))))
     (when (featurep 'olivetti)
@@ -677,6 +677,11 @@ Otherwise send key 'esc' to browser."
     (save-excursion
       (org-mode)
       (outline-show-all))
+
+    (when (and (featurep 'olivetti)
+               olivetti-mode)
+      (setq-local olivetti-mode nil))
+
     (set (make-local-variable 'eaf--buffer-app-name) buffer-app-name)
     (set (make-local-variable 'eaf--buffer-id) buffer-id)
     (local-set-key (kbd "C-c C-c") 'eaf-edit-buffer-confirm)
