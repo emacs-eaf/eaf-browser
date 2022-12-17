@@ -582,11 +582,6 @@ choose a search engine defined in `eaf-browser-search-engines'"
          (search-url (eaf--create-search-url search-string search-engine use-user-engine)))
     (eaf-open search-url "browser")))
 
-(defun eaf--exit_fullscreen_request ()
-  "Exit EAF browser fullscreen."
-  (setq-local eaf-fullscreen-p nil)
-  (eaf-monitor-configuration-change))
-
 (defun eaf-browser-send-esc-or-exit-fullscreen ()
   "Escape fullscreen status if browser current is fullscreen.
 Otherwise send key 'esc' to browser."
