@@ -687,12 +687,6 @@ class AppBuffer(BrowserBuffer):
 
     def init_web_page_background(self):
         self.buffer_widget.web_page.setBackgroundColor(QColor(get_emacs_theme_background()))
-        # if self.dark_mode_is_enabled():
-        #     # If dark mode enable, use Darkreader.js background color.
-        #     self.buffer_widget.web_page.setBackgroundColor(QColor(get_emacs_theme_background()))
-        # else:
-        #     # Otherwise use white, because most website is use white background.
-        #     self.buffer_widget.web_page.setBackgroundColor(QColor("#FFFFFF"))
 
 class HistoryPage():
     def __init__(self, title, url, hit):
