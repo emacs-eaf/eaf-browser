@@ -25,7 +25,8 @@ from core.utils import (touch, interactive, is_port_in_use,
                         eval_in_emacs, get_emacs_func_result, get_emacs_func_cache_result,
                         message_to_emacs, set_emacs_var,
                         translate_text, open_url_in_new_tab,
-                        get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui)
+                        get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui,
+                        get_emacs_theme_background, get_emacs_theme_foreground)
 from core.webengine import BrowserBuffer
 import os
 import re
@@ -85,7 +86,15 @@ class AppBuffer(BrowserBuffer):
 
         self.buffer_widget.init_dark_mode_js(__file__,
                                              self.text_selection_color,
-                                             self.dark_mode_theme)
+                                             self.dark_mode_theme,
+                                             {
+                                                 "brightness": 100,
+                                                 "constrast": 100,
+                                                 "sepia": 0,
+                                                 "mode": 0,
+                                                 "darkSchemeBackgroundColor": get_emacs_theme_background(),
+         "darkSchemeForegroundColor": get_emacs_theme_foreground()
+     })
 
         self.close_page.connect(self.record_close_page)
 
@@ -677,12 +686,13 @@ class AppBuffer(BrowserBuffer):
                  not self.url.startswith("devtools://")
 
     def init_web_page_background(self):
-        if self.dark_mode_is_enabled():
-            # If dark mode enable, use Darkreader.js background color.
-            self.buffer_widget.web_page.setBackgroundColor(QColor("#242525"))
-        else:
-            # Otherwise use white, because most website is use white background.
-            self.buffer_widget.web_page.setBackgroundColor(QColor("#FFFFFF"))
+        self.buffer_widget.web_page.setBackgroundColor(QColor(get_emacs_theme_background()))
+        # if self.dark_mode_is_enabled():
+        #     # If dark mode enable, use Darkreader.js background color.
+        #     self.buffer_widget.web_page.setBackgroundColor(QColor(get_emacs_theme_background()))
+        # else:
+        #     # Otherwise use white, because most website is use white background.
+        #     self.buffer_widget.web_page.setBackgroundColor(QColor("#FFFFFF"))
 
 class HistoryPage():
     def __init__(self, title, url, hit):
