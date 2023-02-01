@@ -89,11 +89,11 @@ class AppBuffer(BrowserBuffer):
                                              self.dark_mode_theme,
                                              {
                                                  "brightness": 100,
-                                                 "constrast": 100,
-                                                 "sepia": 0,
+                                                 "constrast": 90,
+                                                 "sepia": 10,
                                                  "mode": 0,
                                                  "darkSchemeBackgroundColor": get_emacs_theme_background(),
-         "darkSchemeForegroundColor": get_emacs_theme_foreground()
+                                                 "darkSchemeForegroundColor": get_emacs_theme_foreground()
      })
 
         self.close_page.connect(self.record_close_page)
