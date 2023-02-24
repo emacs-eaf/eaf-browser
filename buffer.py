@@ -736,6 +736,10 @@ class AdBlockInterceptor(QWebEngineUrlRequestInterceptor):
         if self.buffer.enable_adblocker:
             url = info.requestUrl().toString()
 
+            # Python's performance is not enough if just use re.compile to match 55000 rules.
+            # We need use braveblock improve parse performance because braveblock implement by Rust.
+            #
+            # QWebEngineUrlRequestInterceptor will BLOCK main thread if this function is too slow.
             if easylist_adblocker.check_network_urls(
                 url=url,
                 source_url="",  # do not set this url, source_url mean origin site to send ads
