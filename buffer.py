@@ -197,7 +197,7 @@ class AppBuffer(BrowserBuffer):
             cursor_foreground_color = ""
             cursor_background_color = ""
 
-            if self.caret_browsing_js_raw == None:
+            if self.caret_browsing_js_raw is None:
                 self.caret_browsing_js_raw = self.buffer_widget.read_js_content("caret_browsing.js")
 
             self.caret_browsing_js = self.caret_browsing_js_raw.replace("%1", cursor_foreground_color).replace("%2", cursor_background_color)
@@ -333,7 +333,7 @@ class AppBuffer(BrowserBuffer):
             self.load_adblocker()
 
     def add_password_entry(self):
-        if self.pw_autofill_raw == None:
+        if self.pw_autofill_raw is None:
             self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
 
         self.buffer_widget.eval_js(self.pw_autofill_raw.replace("%1", "''"))
@@ -348,7 +348,7 @@ class AppBuffer(BrowserBuffer):
             return False
 
     def pw_autofill_gen_id(self, id):
-        if self.pw_autofill_raw == None:
+        if self.pw_autofill_raw is None:
             self.pw_autofill_raw = self.buffer_widget.read_js_content("pw_autofill.js")
 
         from urllib.parse import urlparse
@@ -585,7 +585,7 @@ class AppBuffer(BrowserBuffer):
         self.send_input_message("Are you sure you want to delete cookie of current site?", "delete_cookie", "yes-or-no")
 
     def load_readability_js(self):
-        if self.readability_js == None:
+        if self.readability_js is None:
             self.readability_js = open(os.path.join(os.path.dirname(__file__),
                                                     "node_modules",
                                                     "@mozilla",
@@ -603,7 +603,7 @@ class AppBuffer(BrowserBuffer):
             self.load_readability_js()
 
             html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
-            if html == None:
+            if html is None:
                 self.refresh_page()
                 message_to_emacs("Cannot parse text content of current page, failed to switch reader mode.")
             else:
@@ -622,7 +622,7 @@ class AppBuffer(BrowserBuffer):
         self.load_readability_js()
 
         html = self.buffer_widget.execute_js("new Readability(document).parse().content;")
-        if html == None:
+        if html is None:
             self.refresh_page()
             message_to_emacs("Cannot parse text content of current page, failed to render by eww.")
         else:
@@ -680,7 +680,7 @@ class AppBuffer(BrowserBuffer):
         ''' Return bool of whether dark mode is enabled.'''
         dark_mode_var = get_emacs_var("eaf-browser-dark-mode")
         return (dark_mode_var == "force" or \
-                dark_mode_var == True or \
+                dark_mode_var is True or \
                 (dark_mode_var == "follow" and \
                  self.theme_mode == "dark")) and \
                  not self.url.startswith("devtools://")
