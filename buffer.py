@@ -21,6 +21,7 @@
 
 from PyQt6.QtCore import QUrl, pyqtSlot
 from PyQt6.QtGui import QColor
+from PyQt6.QtWebEngineCore import QWebEngineUrlRequestInterceptor
 from core.utils import (touch, interactive, is_port_in_use,
                         eval_in_emacs, get_emacs_func_result, get_emacs_func_cache_result,
                         message_to_emacs, set_emacs_var,
@@ -28,6 +29,7 @@ from core.utils import (touch, interactive, is_port_in_use,
                         get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui,
                         get_emacs_theme_background, get_emacs_theme_foreground)
 from core.webengine import BrowserBuffer
+import braveblock
 import os
 import re
 import threading
@@ -104,7 +106,6 @@ class AppBuffer(BrowserBuffer):
 
         self.buffer_widget.translate_selected_text.connect(translate_text)
 
-        self.buffer_widget.urlChanged.connect(self.set_adblocker)
         self.buffer_widget.urlChanged.connect(self.caret_exit)
 
         # Record url when url changed.
@@ -134,6 +135,8 @@ class AppBuffer(BrowserBuffer):
 
         self.start_loading_time = 0
 
+        self.interceptor = AdBlockInterceptor(self.profile, self)
+        
     def load_history(self):
         self.history_list = []
         if self.remember_history:
@@ -225,9 +228,6 @@ class AppBuffer(BrowserBuffer):
         ''' Hook to run after update_progress hits 100. '''
         self.init_pw_autofill()
 
-        if self.enable_adblocker:
-            self.load_adblocker()
-
         # Update input focus state.
         self.is_focus()
 
@@ -308,29 +308,20 @@ class AppBuffer(BrowserBuffer):
         else:
             message_to_emacs("No page need recovery.")
 
-    def load_adblocker(self):
-        self.buffer_widget.load_css(os.path.join(os.path.dirname(__file__), "adblocker.css"),'adblocker')
-
     @interactive
     def toggle_adblocker(self):
         ''' Change adblocker status.'''
         if self.enable_adblocker:
             self.enable_adblocker = False
             set_emacs_var("eaf-browser-enable-adblocker", False)
-            self.buffer_widget.remove_css('adblocker', True)
             message_to_emacs("Successfully disabled adblocker!")
         elif not self.enable_adblocker:
             self.enable_adblocker = True
             set_emacs_var("eaf-browser-enable-adblocker", True)
-            self.load_adblocker()
             message_to_emacs("Successfully enabled adblocker!")
 
     def update_url(self, url):
         self.url = self.buffer_widget.url().toString()
-
-    def set_adblocker(self, url):
-        if self.enable_adblocker and not self.page_closed:
-            self.load_adblocker()
 
     def add_password_entry(self):
         if self.pw_autofill_raw is None:
@@ -592,9 +583,9 @@ class AppBuffer(BrowserBuffer):
                                                     "readability",
                                                     "Readability.js"
                                                     ), encoding="utf-8").read()
-        
+
         self.buffer_widget.eval_js(self.readability_js)
-        
+
     @interactive(insert_or_do=True)
     def switch_to_reader_mode(self):
         if self.buffer_widget.execute_js("document.getElementById('readability-page-1') != null;"):
@@ -616,7 +607,7 @@ class AppBuffer(BrowserBuffer):
         text = self.buffer_widget.execute_js("new Readability(document).parse().textContent;")
         self.refresh_page()
         eval_in_emacs('eaf--browser-export-text', ["EAF-BROWSER-TEXT-" + self.url, text])
-        
+
     @interactive(insert_or_do=True)
     def render_by_eww(self):
         self.load_readability_js()
@@ -631,7 +622,7 @@ class AppBuffer(BrowserBuffer):
             new_file, filename = tempfile.mkstemp(suffix=".html")
             with os.fdopen(new_file, 'w') as tmp:
                 tmp.write(get_emacs_var("eaf-browser-reader-mode-style") + html)
-            
+
             self.refresh_page()
             eval_in_emacs("eaf--browser-render-by-eww", [self.url, filename])
 
@@ -727,3 +718,28 @@ class PasswordDb(object):
         SELECT id, host, password, form_data FROM autofill
         WHERE host=? and id>? ORDER BY id
         """, (host, id))
+
+with open(os.path.join(os.path.dirname(__file__), "easylist.txt")) as f:
+    raw_rules = f.readlines()
+    easylist_adblocker = braveblock.Adblocker(rules=raw_rules)
+
+class AdBlockInterceptor(QWebEngineUrlRequestInterceptor):
+    def __init__(self, profile, buffer):
+        QWebEngineUrlRequestInterceptor.__init__(self)
+        profile.setUrlRequestInterceptor(self)
+        self.buffer = buffer
+
+    def interceptRequest(self, info):
+        # Ad Test site:
+        # https://d3ward.github.io/toolz/adblock.html
+
+        if self.buffer.enable_adblocker:
+            url = info.requestUrl().toString()
+
+            if easylist_adblocker.check_network_urls(
+                url=url,
+                source_url="",  # do not set this url, source_url mean origin site to send ads
+                request_type=""):
+
+                # print("Block Ad: ", url)
+                info.block(True)
