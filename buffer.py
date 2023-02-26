@@ -26,7 +26,7 @@ from core.utils import (touch, interactive, is_port_in_use,
                         eval_in_emacs, get_emacs_func_result, get_emacs_func_cache_result,
                         message_to_emacs, set_emacs_var,
                         translate_text, open_url_in_new_tab,
-                        get_emacs_var, get_emacs_vars, get_emacs_config_dir, PostGui,
+                        get_emacs_var, get_emacs_vars, get_emacs_config_dir,
                         get_emacs_theme_background, get_emacs_theme_foreground)
 from core.webengine import BrowserBuffer
 import braveblock
