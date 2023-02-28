@@ -29,12 +29,17 @@ from core.utils import (touch, interactive, is_port_in_use,
                         get_emacs_var, get_emacs_vars, get_emacs_config_dir,
                         get_emacs_theme_background, get_emacs_theme_foreground)
 from core.webengine import BrowserBuffer
-import braveblock
 import os
 import re
 import threading
 import time
 import urllib
+
+found_braveblock = True
+try:
+    import braveblock
+except:
+    found_braveblock = False
 
 class AppBuffer(BrowserBuffer):
     def __init__(self, buffer_id, url, arguments):
@@ -135,7 +140,8 @@ class AppBuffer(BrowserBuffer):
 
         self.start_loading_time = 0
 
-        self.interceptor = AdBlockInterceptor(self.profile, self)
+        if found_braveblock:
+            self.interceptor = AdBlockInterceptor(self.profile, self)
         
     def load_history(self):
         self.history_list = []
@@ -719,9 +725,10 @@ class PasswordDb(object):
         WHERE host=? and id>? ORDER BY id
         """, (host, id))
 
-with open(os.path.join(os.path.dirname(__file__), "easylist.txt")) as f:
-    raw_rules = f.readlines()
-    easylist_adblocker = braveblock.Adblocker(rules=raw_rules)
+if found_braveblock:
+    with open(os.path.join(os.path.dirname(__file__), "easylist.txt")) as f:
+        raw_rules = f.readlines()
+        easylist_adblocker = braveblock.Adblocker(rules=raw_rules)
 
 class AdBlockInterceptor(QWebEngineUrlRequestInterceptor):
     def __init__(self, profile, buffer):
