@@ -726,7 +726,7 @@ class PasswordDb(object):
         """, (host, id))
 
 if found_braveblock:
-    with open(os.path.join(os.path.dirname(__file__), "easylist.txt")) as f:
+    with open(os.path.join(os.path.dirname(__file__), "easylist.txt"), encoding="utf8") as f:
         raw_rules = f.readlines()
         easylist_adblocker = braveblock.Adblocker(rules=raw_rules)
 
