@@ -100,8 +100,7 @@ class AppBuffer(BrowserBuffer):
                                                  "sepia": 10,
                                                  "mode": 0,
                                                  "darkSchemeBackgroundColor": get_emacs_theme_background(),
-                                                 "darkSchemeForegroundColor": get_emacs_theme_foreground()
-     })
+                                                 "darkSchemeForegroundColor": get_emacs_theme_foreground()})
 
         self.close_page.connect(self.record_close_page)
 
@@ -143,6 +142,45 @@ class AppBuffer(BrowserBuffer):
         if found_braveblock:
             self.interceptor = AdBlockInterceptor(self.profile, self)
         
+    @interactive
+    def update_theme(self):
+        (self.dark_mode_var,
+         self.remember_history, self.blank_page_url,
+         self.enable_adblocker, self.enable_autofill,
+         self.aria2_auto_file_renaming, self.aria2_proxy_host, self.aria2_proxy_port,
+         self.chrome_history_file,
+         self.safari_history_file,
+         self.translate_language,
+         self.text_selection_color,
+         self.dark_mode_theme
+         ) = get_emacs_vars([
+             "eaf-browser-dark-mode",
+             "eaf-browser-remember-history",
+             "eaf-browser-blank-page-url",
+             "eaf-browser-enable-adblocker",
+             "eaf-browser-enable-autofill",
+             "eaf-browser-aria2-auto-file-renaming",
+             "eaf-browser-aria2-proxy-host",
+             "eaf-browser-aria2-proxy-port",
+             "eaf-browser-chrome-history-file",
+             "eaf-browser-safari-history-file",
+             "eaf-browser-translate-language",
+             "eaf-browser-text-selection-color",
+             "eaf-browser-dark-mode-theme"])
+
+        self.buffer_widget.init_dark_mode_js(__file__,
+                                             self.text_selection_color,
+                                             self.dark_mode_theme,
+                                             {
+                                                 "brightness": 100,
+                                                 "constrast": 90,
+                                                 "sepia": 10,
+                                                 "mode": 0,
+                                                 "darkSchemeBackgroundColor": get_emacs_theme_background(),
+                                                 "darkSchemeForegroundColor": get_emacs_theme_foreground()})
+
+        self.refresh_page()
+
     def load_history(self):
         self.history_list = []
         if self.remember_history:
