@@ -16,16 +16,13 @@
   ],
   "pip": {
     "linux": [
-      "pysocks",
-      "braveblock"
+      "pysocks"
     ],
     "win32": [
-      "pysocks",
-      "braveblock"
+      "pysocks"
     ],
     "darwin": [
-      "pysocks",
-      "braveblock"
+      "pysocks"
     ]
   },
   "npm_install": true
