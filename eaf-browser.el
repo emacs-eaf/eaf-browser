@@ -285,6 +285,7 @@ Options:
     ("M-p" . "duplicate_page")
     ("M-t" . "new_blank_page")
     ("M-d" . "toggle_dark_mode")
+    ("M-l" . "toggle_dark_mode_light_theme")
     ("SPC" . "insert_or_scroll_up_page")
     ("J" . "insert_or_select_left_tab")
     ("K" . "insert_or_select_right_tab")
