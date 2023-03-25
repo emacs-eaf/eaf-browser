@@ -141,14 +141,15 @@ class AppBuffer(BrowserBuffer):
 
         if found_braveblock:
             self.interceptor = AdBlockInterceptor(self.profile, self)
-        
+
     @interactive
-    def update_theme(self):
-        (self.text_selection_color,
-         self.dark_mode_theme
-         ) = get_emacs_vars([
-             "eaf-browser-text-selection-color",
-             "eaf-browser-dark-mode-theme"])
+    def update_theme(self, reload_config=True):
+        if reload_config:
+            (self.text_selection_color,
+             self.dark_mode_theme
+             ) = get_emacs_vars([
+                 "eaf-browser-text-selection-color",
+                 "eaf-browser-dark-mode-theme"])
 
         self.buffer_widget.init_dark_mode_js(__file__,
                                              self.text_selection_color,
@@ -333,6 +334,18 @@ class AppBuffer(BrowserBuffer):
                     message_to_emacs("No page need recovery.")
         else:
             message_to_emacs("No page need recovery.")
+
+    @interactive
+    def toggle_dark_mode_light_theme(self):
+        if self.dark_mode_theme == "dark":
+            self.dark_mode_theme = "light"
+        else:
+            self.dark_mode_theme = "dark"
+
+        self.update_theme(False)
+
+        message_to_emacs("Toggle dark mode light theme")
+
 
     @interactive
     def toggle_adblocker(self):
