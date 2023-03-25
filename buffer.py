@@ -143,7 +143,14 @@ class AppBuffer(BrowserBuffer):
             self.interceptor = AdBlockInterceptor(self.profile, self)
 
     @interactive
-    def update_theme(self):
+    def update_theme(self, reload_config=True):
+        if reload_config:
+            (self.text_selection_color,
+             self.dark_mode_theme
+             ) = get_emacs_vars([
+                 "eaf-browser-text-selection-color",
+                 "eaf-browser-dark-mode-theme"])
+
         self.buffer_widget.init_dark_mode_js(__file__,
                                              self.text_selection_color,
                                              self.dark_mode_theme,
@@ -335,7 +342,7 @@ class AppBuffer(BrowserBuffer):
         else:
             self.dark_mode_theme = "dark"
 
-        self.update_theme()
+        self.update_theme(False)
 
         message_to_emacs("Toggle dark mode light theme")
 
