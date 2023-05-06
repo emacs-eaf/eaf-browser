@@ -37,6 +37,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `C-v` | scroll_up_page |
 | `C-y` | yank_text |
 | `C-w` | kill_text |
+| `M-z` | switch_to_input_mode |
 | `M-e` | atomic_edit |
 | `M-c` | caret_toggle_browsing |
 | `M-D` | select_text |
@@ -61,6 +62,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `M-p` | scroll_down_page |
 | `M-t` | new_blank_page |
 | `M-d` | toggle_dark_mode |
+| `M-l` | toggle_dark_mode_light_theme |
 | `SPC` | insert_or_scroll_up_page |
 | `J` | insert_or_select_left_tab |
 | `K` | insert_or_select_right_tab |
@@ -104,6 +106,7 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `,` | insert_or_switch_to_reader_mode |
 | `.` | insert_or_translate_text |
 | `;` | insert_or_translate_page |
+| `M-i` | immersive_translation |
 | `C-M-c` | copy_code |
 | `C-M-l` | copy_link |
 | `C-a` | select_all_or_input_text |

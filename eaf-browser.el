@@ -264,6 +264,7 @@ Options:
     ("C-v" . "scroll_up_page")
     ("C-y" . "yank_text")
     ("C-w" . "kill_text")
+    ("M-z" . "switch_to_input_mode")
     ("M-e" . "atomic_edit")
     ("M-c" . "caret_toggle_browsing")
     ("M-D" . "select_text")
