@@ -123,7 +123,11 @@ and will re-open them when calling `eaf-browser-restore-buffers' in the future s
   :type 'boolean)
 
 (defcustom eaf-browser-enable-adblocker nil
-  "If non-nil, enable adblocker for EAF Browser."
+  "If non-nil, enable adblocker for EAF Browser.
+
+AdBlocker will slow down the loading speed of EAF browser,
+because adblocker will check every url request before send to server.
+Recommand advertisement blocking on the router or proxy."
   :type 'boolean)
 
 (defcustom eaf-browser-enable-autofill nil
@@ -275,7 +279,6 @@ Options:
     ("M-Q" . "delete_all_cookies")
     ("C-t" . "toggle_password_autofill")
     ("C-d" . "save_page_password")
-    ("M-a" . "toggle_adblocker")
     ("C-M-q" . "clear_history")
     ("C-M-i" . "import_chrome_history")
     ("C-M-s" . "import_safari_history")

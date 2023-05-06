@@ -139,7 +139,7 @@ class AppBuffer(BrowserBuffer):
 
         self.start_loading_time = 0
 
-        if found_braveblock:
+        if found_braveblock and self.enable_adblocker:
             self.interceptor = AdBlockInterceptor(self.profile, self)
 
     @interactive
@@ -345,19 +345,6 @@ class AppBuffer(BrowserBuffer):
         self.update_theme(False)
 
         message_to_emacs("Toggle dark mode light theme")
-
-
-    @interactive
-    def toggle_adblocker(self):
-        ''' Change adblocker status.'''
-        if self.enable_adblocker:
-            self.enable_adblocker = False
-            set_emacs_var("eaf-browser-enable-adblocker", False)
-            message_to_emacs("Successfully disabled adblocker!")
-        elif not self.enable_adblocker:
-            self.enable_adblocker = True
-            set_emacs_var("eaf-browser-enable-adblocker", True)
-            message_to_emacs("Successfully enabled adblocker!")
 
     def update_url(self, url):
         self.url = self.buffer_widget.url().toString()

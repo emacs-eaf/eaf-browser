@@ -52,7 +52,6 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 | `M-Q` | delete_all_cookies |
 | `C-t` | toggle_password_autofill |
 | `C-d` | save_page_password |
-| `M-a` | toggle_adblocker |
 | `C-M-q` | clear_history |
 | `C-M-i` | import_chrome_history |
 | `C-M-s` | import_safari_history |
