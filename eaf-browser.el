@@ -329,6 +329,7 @@ Options:
     ("," . "insert_or_switch_to_reader_mode")
     ("." . "insert_or_translate_text")
     (";" . "insert_or_translate_page")
+    ("M-i" . "immersive_translation")
     ("C-M-c" . "copy_code")
     ("C-M-l" . "copy_link")
     ("C-a" . "select_all_or_input_text")
@@ -688,6 +689,15 @@ Otherwise send key 'esc' to browser."
   "Open EAF browser application given a URL and ARGS."
   (interactive "M[EAF/browser] URL: ")
   (eaf-open (eaf-wrap-url url) "browser" args))
+
+(defun eaf-open-browser-same-window (url current-url &optional args)
+  (setq current-url (url-unhex-string current-url))
+  (catch 'found-rss-reader-buffer
+    (eaf-for-each-eaf-buffer
+     (when (string-equal eaf--buffer-url current-url)
+       (select-window (get-buffer-window buffer))
+       (eaf-open (eaf-wrap-url url) "browser" args)
+       (throw 'found-rss-reader-buffer buffer)))))
 
 ;;;###autoload
 (defun eaf-open-browser-other-window (url &optional args)
