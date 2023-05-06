@@ -23,6 +23,8 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 
 ### The keybinding of EAF Browser.
 
+Please press `Alt + z` to execute command `switch_to_input_mode` if some site can't input text.
+
 | Key   | Event   |
 | :---- | :------ |
 | `C--` | zoom_out |
