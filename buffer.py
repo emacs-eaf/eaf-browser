@@ -22,12 +22,7 @@
 from PyQt6.QtCore import QUrl, pyqtSlot
 from PyQt6.QtGui import QColor
 from PyQt6.QtWebEngineCore import QWebEngineUrlRequestInterceptor
-from core.utils import (touch, interactive, is_port_in_use,
-                        eval_in_emacs, get_emacs_func_result, get_emacs_func_cache_result,
-                        message_to_emacs, set_emacs_var,
-                        translate_text, open_url_in_new_tab, open_url_in_new_tab_same_window,
-                        get_emacs_var, get_emacs_vars, get_emacs_config_dir,
-                        get_emacs_theme_background, get_emacs_theme_foreground)
+from core.utils import *
 from core.webengine import BrowserBuffer
 import os
 import re
