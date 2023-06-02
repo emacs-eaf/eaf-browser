@@ -266,6 +266,7 @@ Options:
     ("C-w" . "kill_text")
     ("M-z" . "switch_to_input_mode")
     ("M-e" . "atomic_edit")
+    ("M-i" . "immersive_translation")
     ("M-c" . "caret_toggle_browsing")
     ("M-D" . "select_text")
     ("M-s" . "open_link")
