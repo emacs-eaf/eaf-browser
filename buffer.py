@@ -19,16 +19,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from PyQt6.QtCore import QUrl, pyqtSlot
-from PyQt6.QtGui import QColor
-from PyQt6.QtWebEngineCore import QWebEngineUrlRequestInterceptor
-from core.utils import *
-from core.webengine import BrowserBuffer
 import os
 import re
 import threading
 import time
 import urllib
+
+from core.utils import *
+from core.webengine import BrowserBuffer
+from PyQt6.QtCore import QUrl, pyqtSlot
+from PyQt6.QtGui import QColor
+from PyQt6.QtWebEngineCore import QWebEngineUrlRequestInterceptor
 
 found_braveblock = True
 try:
@@ -256,7 +257,7 @@ class AppBuffer(BrowserBuffer):
     def update_position(self):
         mode_line_height = get_emacs_func_cache_result("eaf-get-mode-line-height", [])
         if mode_line_height > 0.1:
-            position = self.buffer_widget.web_page.scrollPosition().y();
+            position = self.buffer_widget.web_page.scrollPosition().y()
             view_height = self.buffer_widget.height()
             page_height = self.buffer_widget.web_page.contentsSize().height()
             pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
