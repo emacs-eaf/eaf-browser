@@ -263,6 +263,7 @@ class AppBuffer(BrowserBuffer):
             pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
             eval_in_emacs("eaf--browser-update-position", [pos_percentage])
 
+    @PostGui()
     def handle_input_response(self, callback_tag, result_content):
         ''' Handle input message.'''
         if not BrowserBuffer.handle_input_response(self, callback_tag, result_content):
