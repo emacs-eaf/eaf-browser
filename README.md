@@ -17,9 +17,16 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 
 ### Dependency List
 
-| Package   | Description                 |
-| :-------- | :------                     |
-| aria2     | Download files from the web |
+| Package                                                    | Description                 |
+|:-----------------------------------------------------------|:----------------------------|
+| aria2                                                      | Download files from the web |
+| [pycookiecheat](https://github.com/n8henrie/pycookiecheat) | Import cookies from Chrome  |
+
+### Import cookies from Chrome
+
+When you are used to using Chrome, you can set `eaf-browser-auto-import-chrome-cookies` to `t`, and the EAF browser will automatically import cookies from Chrome. You don't need to login separately in Chrome and EAF browser.
+
+[Do not Support Windows](https://github.com/n8henrie/pycookiecheat#how-about-windows)
 
 ### The keybinding of EAF Browser.
 

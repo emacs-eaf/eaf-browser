@@ -210,6 +210,10 @@ Options:
   "The default chrome bookmark file to import."
   :type 'string)
 
+(defcustom eaf-browser-auto-import-chrome-cookies nil
+  "If non-nil, import cookies from chrome."
+  :type 'boolean)
+
 (defcustom eaf-browser-caret-mode-keybinding
   '(("j"   . "caret_next_line")
     ("k"   . "caret_previous_line")
