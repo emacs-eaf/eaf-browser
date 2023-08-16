@@ -280,7 +280,12 @@ class AppBuffer(BrowserBuffer):
             position = self.buffer_widget.web_page.scrollPosition().y()
             view_height = self.buffer_widget.height()
             page_height = self.buffer_widget.web_page.contentsSize().height()
-            pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
+
+            if page_height != 0:
+                pos_percentage = '%.1f%%' % ((position + view_height) / page_height * 100)
+            else:
+                pos_percentage = '0.0%'
+
             eval_in_emacs("eaf--browser-update-position", [pos_percentage])
 
     @PostGui()
