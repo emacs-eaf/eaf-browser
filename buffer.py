@@ -63,7 +63,8 @@ class AppBuffer(BrowserBuffer):
          self.translate_language,
          self.text_selection_color,
          self.dark_mode_theme,
-         self.auto_import_chrome_cookies
+         self.auto_import_chrome_cookies,
+         self.chrome_browser_name
          ) = get_emacs_vars([
              "eaf-browser-dark-mode",
              "eaf-browser-remember-history",
@@ -78,7 +79,8 @@ class AppBuffer(BrowserBuffer):
              "eaf-browser-translate-language",
              "eaf-browser-text-selection-color",
              "eaf-browser-dark-mode-theme",
-             "eaf-browser-auto-import-chrome-cookies"
+             "eaf-browser-auto-import-chrome-cookies",
+             "eaf-browser-chrome-browser-name"
          ])
 
         # Use thread to avoid slow down open speed.
@@ -140,22 +142,22 @@ class AppBuffer(BrowserBuffer):
 
         if found_braveblock and self.enable_adblocker:
             self.interceptor = AdBlockInterceptor(self.profile, self)
-       
+
         if self.auto_import_chrome_cookies:
             # import cookies from Chrome automatically
             self.import_chrome_cookies(url)
 
     def import_chrome_cookies(self, url):
         from urllib.parse import urlparse
-        from pycookiecheat import chrome_cookies # package that fetches cookies 
+        from pycookiecheat import chrome_cookies # package that fetches cookies
         from PyQt6.QtNetwork import QNetworkCookie
         cookieStore = self.buffer_widget.page().profile().cookieStore()
-        cookies = chrome_cookies(url)
+        cookies = chrome_cookies(url, browser=self.chrome_browser_name)
         for name, value in cookies.items():
             qcookie = QNetworkCookie()
             qcookie.setName(name.encode())
             qcookie.setValue(value.encode())
-            qcookie.setDomain(urlparse(url).netloc)                
+            qcookie.setDomain(urlparse(url).netloc)
             cookieStore.setCookie(qcookie, QUrl())
 
     @interactive
