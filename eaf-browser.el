@@ -214,6 +214,10 @@ Options:
   "If non-nil, import cookies from chrome."
   :type 'boolean)
 
+(defcustom eaf-browser-chrome-browser-name "Chrome"
+  "The real chrome execute name, default is Chrome."
+  :type 'string)
+
 (defcustom eaf-browser-caret-mode-keybinding
   '(("j"   . "caret_next_line")
     ("k"   . "caret_previous_line")
