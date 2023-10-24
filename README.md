@@ -26,6 +26,14 @@ Browser application for the [Emacs Application Framework](https://github.com/ema
 
 When you are used to using Chrome, you can set `eaf-browser-auto-import-chrome-cookies` to `t`, and the EAF browser will automatically import cookies from Chrome. You don't need to login separately in Chrome and EAF browser.
 
+#### Support chrome based browser
+
+Support import chrome based browser cooike by set `eaf-browser-chrome-browser-name` to:
+
+1. Chrome (default)
+2. Chromium
+3. Brave
+
 [Do not Support Windows](https://github.com/n8henrie/pycookiecheat#how-about-windows)
 
 ### The keybinding of EAF Browser.
@@ -134,4 +142,3 @@ Please press `Alt + z` to execute command `switch_to_input_mode` if some site ca
 | `C-<right>` | eaf-send-ctrl-right-sequence |
 | `C-<delete>` | eaf-send-ctrl-delete-sequence |
 | `C-<backspace>` | eaf-send-ctrl-backspace-sequence |
-
