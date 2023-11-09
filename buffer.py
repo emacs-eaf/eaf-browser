@@ -51,6 +51,9 @@ class AppBuffer(BrowserBuffer):
                 if os.path.exists(url):
                     os.remove(url)
         else:
+            if arguments in ["pc", "phone"]:
+                self.set_agent(arguments)
+
             self.buffer_widget.setUrl(QUrl(url))
 
         # Init emacs vars.
