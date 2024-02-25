@@ -190,9 +190,9 @@ class AppBuffer(BrowserBuffer):
         if self.remember_history:
             self.history_log_file_path = os.path.join(self.config_dir, "browser", "history", "log.txt")
 
-            self.history_pattern = re.compile("^(.+)ᛝ(.+)ᛡ(.+)$")
-            self.noprefix_url_pattern = re.compile("^(https?|file)://(.+)")
-            self.nopostfix_url_pattern = re.compile("^[^#\?]*")
+            self.history_pattern = re.compile(r"^(.+)ᛝ(.+)ᛡ(.+)$")
+            self.noprefix_url_pattern = re.compile(r"^(https?|file)://(.+)")
+            self.nopostfix_url_pattern = re.compile(r"^[^#\?]*")
             self.history_close_file_path = os.path.join(self.config_dir, "browser", "history", "close.txt")
             touch(self.history_log_file_path)
             with open(self.history_log_file_path, "r", encoding="utf-8") as f:
