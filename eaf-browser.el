@@ -187,7 +187,8 @@ Options:
 - \"follow\" to follow Emacs theme
 - \"force\" to force dark mode
 - nil to disable dark mode"
-  :type 'string)
+  :type '(choice (const nil)
+                 string))
 
 (defcustom eaf-browser-chrome-history-file "~/.config/google-chrome/Default/History"
   "Set the chrome history file when exporting chrome history."
