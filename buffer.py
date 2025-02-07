@@ -30,7 +30,6 @@ from core.webengine import BrowserBuffer
 from PyQt6.QtCore import QUrl, pyqtSlot
 from PyQt6.QtGui import QColor
 from PyQt6.QtWebEngineCore import QWebEngineUrlRequestInterceptor
-
 found_braveblock = True
 try:
     import braveblock
@@ -520,7 +519,7 @@ class AppBuffer(BrowserBuffer):
         if is_valid_url:
             wrap_url = get_emacs_func_result('eaf-wrap-url', [url])
             self.buffer_widget.setUrl(QUrl(wrap_url))
-            self.load_tampermonkey(warp_url)
+            self.load_tampermonkey(wrap_url)
         else:
             search_url = get_emacs_func_result('eaf--create-search-url', [url])
             self.buffer_widget.setUrl(QUrl(search_url))
