@@ -134,6 +134,14 @@ Recommand advertisement blocking on the router or proxy."
   "If non-nil, enable autofill password for EAF Browser."
   :type 'boolean)
 
+(defcustom eaf-browser-enable-tampermonkey nil
+  "If non-nil, enable Tampermonkey scripts for EAF Browser."
+  :type 'boolean)
+
+(defcustom eaf-browser-tampermonkey-location ""
+	"If eaf-browser-enable-tampermonkey is non-nil, find scripts in here."
+	:type 'string)
+
 (defcustom eaf-browser-remember-history t
   "If non-nil, remember browsing history for EAF Browser.
 
