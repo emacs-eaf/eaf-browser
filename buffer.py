@@ -30,7 +30,6 @@ from core.webengine import BrowserBuffer
 from PyQt6.QtCore import QUrl, pyqtSlot
 from PyQt6.QtGui import QColor
 from PyQt6.QtWebEngineCore import QWebEngineUrlRequestInterceptor
-
 found_braveblock = True
 try:
     import braveblock
@@ -60,6 +59,7 @@ class AppBuffer(BrowserBuffer):
         (self.dark_mode_var,
          self.remember_history, self.blank_page_url,
          self.enable_adblocker, self.enable_autofill,
+         self.enable_tampermonkey, self.tampermonkey_script_location,
          self.aria2_auto_file_renaming, self.aria2_proxy_host, self.aria2_proxy_port,
          self.chrome_history_file,
          self.safari_history_file,
@@ -67,13 +67,15 @@ class AppBuffer(BrowserBuffer):
          self.text_selection_color,
          self.dark_mode_theme,
          self.auto_import_chrome_cookies,
-         self.chrome_browser_name
+         self.chrome_browser_name,
          ) = get_emacs_vars([
              "eaf-browser-dark-mode",
              "eaf-browser-remember-history",
              "eaf-browser-blank-page-url",
              "eaf-browser-enable-adblocker",
              "eaf-browser-enable-autofill",
+             "eaf-browser-enable-tampermonkey",
+             "eaf-browser-tampermonkey-location",
              "eaf-browser-aria2-auto-file-renaming",
              "eaf-browser-aria2-proxy-host",
              "eaf-browser-aria2-proxy-port",
@@ -85,6 +87,8 @@ class AppBuffer(BrowserBuffer):
              "eaf-browser-auto-import-chrome-cookies",
              "eaf-browser-chrome-browser-name"
          ])
+
+        self.load_tampermonkey(url)
 
         # Use thread to avoid slow down open speed.
         threading.Thread(target=self.load_history).start()
@@ -162,6 +166,17 @@ class AppBuffer(BrowserBuffer):
             qcookie.setValue(value.encode())
             qcookie.setDomain(urlparse(url).netloc)
             cookieStore.setCookie(qcookie, QUrl())
+
+    def load_tampermonkey(self,url):
+        if self.enable_tampermonkey:
+            try:
+                for filepath in os.listdir(self.tampermonkey_script_location):
+                    script = TampermonkeyScript(os.path.join(self.tampermonkey_script_location,filepath))
+                    if script.can_run(url):
+                        self.buffer_widget.eval_js(script.content())
+            except FileNotFoundError:
+                message_to_emacs(f"{self.tampermonkey_script_location} is not found!")
+
 
     @interactive
     def update_theme(self, reload_config=True):
@@ -504,9 +519,11 @@ class AppBuffer(BrowserBuffer):
         if is_valid_url:
             wrap_url = get_emacs_func_result('eaf-wrap-url', [url])
             self.buffer_widget.setUrl(QUrl(wrap_url))
+            self.load_tampermonkey(wrap_url)
         else:
             search_url = get_emacs_func_result('eaf--create-search-url', [url])
             self.buffer_widget.setUrl(QUrl(search_url))
+            self.load_tampermonkey(search_url)
 
     def _clear_history(self):
         if os.path.exists(self.history_log_file_path):
@@ -801,3 +818,32 @@ class AdBlockInterceptor(QWebEngineUrlRequestInterceptor):
 
                 # print("Block Ad: ", url)
                 info.block(True)
+
+class TampermonkeyScript():
+    # Currently, this class only supports match and export matching, and only supports regular expressions.
+    def __init__(self,filepath):
+        # Read the script's content
+        self.file_content = ""
+        with open(filepath,mode="r") as f:
+            self.file_content = f.read()
+
+        match_re = re.compile(r'// @match\s+(\S*)')
+        export_re = re.compile(r'// @export\s+(\S*)')
+
+        self.match_rules = match_re.findall(self.file_content)
+        self.export_rules = export_re.findall(self.file_content)
+
+
+    def can_run(self,url):
+        for export_rule in self.export_rules:
+            if re.match(export_rule,url):
+                return False
+
+        for match_rule in self.match_rules:
+            if re.match(match_rule,url):
+                return True
+
+        return False
+
+    def content(self):
+        return self.file_content
