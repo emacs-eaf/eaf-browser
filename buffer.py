@@ -24,7 +24,6 @@ import re
 import threading
 import time
 import urllib
-from urllib import parse
 
 from core.utils import *
 from core.webengine import BrowserBuffer
