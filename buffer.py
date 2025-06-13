@@ -215,7 +215,7 @@ class AppBuffer(BrowserBuffer):
                 for raw_his in raw_list:
                     his_line = re.match(self.history_pattern, raw_his)
                     if his_line is None: # Obsolete Old history format
-                        old_his = re.match("(.*)\s((https?|file):[^\s]+)$", raw_his)
+                        old_his = re.match(r"(.*)\s((https?|file):[^\s]+)$", raw_his)
                         if old_his is not None:
                             self.history_list.append(HistoryPage(old_his.group(1), old_his.group(2), 1))
                     else:
